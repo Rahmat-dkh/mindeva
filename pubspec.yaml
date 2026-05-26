@@ -1,0 +1,60 @@
+name: mindeva
+description: "Mindeva - Your AI companion for emotional wellness."
+publish_to: 'none'
+
+version: 1.0.0+1
+
+environment:
+  sdk: ^3.9.2
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  cupertino_icons: ^1.0.8
+  
+  # State Management
+  provider: ^6.1.2
+
+  # UI & Styling
+  google_fonts: ^6.2.1
+  
+  # Charts & Calendar
+  fl_chart: ^0.70.2
+  table_calendar: ^3.1.2
+
+  # Storage & Utilities
+  shared_preferences: ^2.3.2
+  intl: ^0.20.2
+  uuid: ^4.5.1
+
+  # AI Integration (Gemini SDK)
+  google_generative_ai: any
+  google_sign_in: ^6.2.1
+
+  # Firebase Services (Auto-resolved)
+  firebase_core: any
+  firebase_auth: any
+  cloud_firestore: any
+  firebase_storage: any
+  firebase_messaging: any
+  firebase_app_check: ^0.4.4+1
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^5.0.0
+  flutter_launcher_icons: ^0.13.1
+
+flutter_launcher_icons:
+  android: true
+  ios: true
+  image_path: "assets/logo.png"
+  min_sdk_android: 21
+  web:
+    generate: false
+
+flutter:
+  uses-material-design: true
+
+  assets:
+    - assets/
