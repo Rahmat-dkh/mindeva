@@ -236,60 +236,69 @@ class _BreathingExerciseScreenState extends State<BreathingExerciseScreen> with 
 
               // Animated Breathing Circles
               Center(
-                child: AnimatedBuilder(
-                  animation: _animationController,
-                  builder: (context, child) {
-                    return Stack(
-                      alignment: Alignment.center,
-                      children: [
-                        // Outer Pulsing Ring
-                        Container(
-                          width: 140 * _scaleAnimation.value,
-                          height: 140 * _scaleAnimation.value,
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            color: AppColors.moodNeutral.withOpacity(0.08 * _opacityAnimation.value),
-                            border: Border.all(
-                              color: AppColors.moodNeutral.withOpacity(0.25 * _opacityAnimation.value),
-                              width: 2,
-                            ),
-                          ),
-                        ),
-                        // Inner Animated circle
-                        Container(
-                          width: 110 * _scaleAnimation.value,
-                          height: 110 * _scaleAnimation.value,
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            gradient: RadialGradient(
-                              colors: [
-                                AppColors.moodNeutral.withOpacity(_opacityAnimation.value),
-                                AppColors.moodNeutral.withOpacity(_opacityAnimation.value - 0.2),
-                              ],
-                            ),
-                            boxShadow: [
-                              BoxShadow(
-                                color: AppColors.moodNeutral.withOpacity(0.25 * _opacityAnimation.value),
-                                blurRadius: 20,
-                                spreadRadius: 4,
+                child: SizedBox(
+                  height: 250, // Memberikan ruang tetap agar tidak overflow saat animasi membesar
+                  child: AnimatedBuilder(
+                    animation: _animationController,
+                    builder: (context, child) {
+                      return Stack(
+                        alignment: Alignment.center,
+                        children: [
+                          // Outer Pulsing Ring
+                          Transform.scale(
+                            scale: _scaleAnimation.value,
+                            child: Container(
+                              width: 140,
+                              height: 140,
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                color: AppColors.moodNeutral.withOpacity(0.08 * _opacityAnimation.value),
+                                border: Border.all(
+                                  color: AppColors.moodNeutral.withOpacity(0.25 * _opacityAnimation.value),
+                                  width: 2,
+                                ),
                               ),
-                            ],
-                          ),
-                          child: Center(
-                            child: Text(
-                              _currentPhase,
-                              style: const TextStyle(
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold,
-                                fontSize: 16,
-                              ),
-                              textAlign: TextAlign.center,
                             ),
                           ),
-                        ),
-                      ],
-                    );
-                  },
+                          // Inner Animated circle
+                          Transform.scale(
+                            scale: _scaleAnimation.value,
+                            child: Container(
+                              width: 110,
+                              height: 110,
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                gradient: RadialGradient(
+                                  colors: [
+                                    AppColors.moodNeutral.withOpacity(_opacityAnimation.value),
+                                    AppColors.moodNeutral.withOpacity(_opacityAnimation.value - 0.2),
+                                  ],
+                                ),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: AppColors.moodNeutral.withOpacity(0.25 * _opacityAnimation.value),
+                                    blurRadius: 20,
+                                    spreadRadius: 4,
+                                  ),
+                                ],
+                              ),
+                              child: Center(
+                                child: Text(
+                                  _currentPhase,
+                                  style: const TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 16,
+                                  ),
+                                  textAlign: TextAlign.center,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      );
+                    },
+                  ),
                 ),
               ),
 

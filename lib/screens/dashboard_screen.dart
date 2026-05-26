@@ -91,60 +91,70 @@ class _DashboardScreenState extends State<DashboardScreen> with AutomaticKeepAli
       builder: (context) {
         return Padding(
           padding: EdgeInsets.only(
-            bottom: MediaQuery.of(context).viewInsets.bottom,
+            bottom: MediaQuery.of(context).viewInsets.bottom > 0 
+                ? MediaQuery.of(context).viewInsets.bottom + 10 
+                : MediaQuery.of(context).padding.bottom + 10,
+            left: 12,
+            right: 12,
           ),
-          child: GlassCard(
-            borderRadius: 30,
-            blur: 15.0, // Keep blur on modal sheets
-            padding: const EdgeInsets.all(24),
-            child: SingleChildScrollView(
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              GlassCard(
+                borderRadius: 28,
+                blur: 15.0, // Keep blur on modal sheets
+                padding: const EdgeInsets.all(20),
+                child: SingleChildScrollView(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
-                      Text(
-                        'Tulis Catatan Harian',
-                        style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                          color: isDark ? Colors.white : Colors.blueGrey.shade800,
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            'Tulis Catatan Harian',
+                            style: TextStyle(
+                              fontSize: 17,
+                              fontWeight: FontWeight.bold,
+                              color: isDark ? Colors.white : Colors.blueGrey.shade800,
+                            ),
+                          ),
+                          IconButton(
+                            icon: const Icon(Icons.close),
+                            onPressed: () => Navigator.pop(context),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 8),
+                      Row(
+                        children: [
+                          Text(
+                            'Mood terpilih: ',
+                            style: TextStyle(
+                              fontSize: 13,
+                              color: isDark ? Colors.grey.shade400 : Colors.blueGrey.shade600,
+                            ),
+                          ),
+                          _buildMoodIndicatorChip(mood),
+                        ],
+                      ),
+                      const SizedBox(height: 16),
+                      Container(
+                        decoration: BoxDecoration(
+                          color: isDark ? Colors.black26 : Colors.white70,
+                          borderRadius: BorderRadius.circular(16),
+                          border: Border.all(color: AppColors.primary.withOpacity(0.2)),
                         ),
-                      ),
-                      IconButton(
-                        icon: const Icon(Icons.close),
-                        onPressed: () => Navigator.pop(context),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 16),
-                  Row(
-                    children: [
-                      Text(
-                        'Mood terpilih: ',
-                        style: TextStyle(
-                          color: isDark ? Colors.grey.shade400 : Colors.blueGrey.shade600,
-                        ),
-                      ),
-                      _buildMoodIndicatorChip(mood),
-                    ],
-                  ),
-                  const SizedBox(height: 20),
-                  Container(
-                    decoration: BoxDecoration(
-                      color: isDark ? Colors.black26 : Colors.white70,
-                      borderRadius: BorderRadius.circular(16),
-                      border: Border.all(color: AppColors.primary.withOpacity(0.2)),
-                    ),
-                    child: TextField(
-                      controller: _noteController,
-                      maxLines: 4,
-                      style: TextStyle(
-                        fontSize: 14,
-                        color: isDark ? Colors.white : Colors.blueGrey.shade800,
-                      ),
+                        child: TextField(
+                          controller: _noteController,
+                          minLines: 2,
+                          maxLines: 5,
+                          style: TextStyle(
+                            fontSize: 14,
+                            color: isDark ? Colors.white : Colors.blueGrey.shade800,
+                          ),
                       decoration: InputDecoration(
                         hintText: 'Bagaimana perasaanmu? Tulis keluh kesahmu di sini untuk dianalisis oleh AI...',
                         hintStyle: TextStyle(color: Colors.grey.shade400, fontSize: 13),
@@ -172,10 +182,12 @@ class _DashboardScreenState extends State<DashboardScreen> with AutomaticKeepAli
               ),
             ),
           ),
-        );
-      },
+        ],
+      ),
     );
-  }
+  },
+);
+}
 
   Widget _buildMoodIndicatorChip(String mood) {
     String emoji = '😐';
@@ -471,14 +483,19 @@ class _DashboardScreenState extends State<DashboardScreen> with AutomaticKeepAli
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                Text(
-                                  'Progres Energi Mental',
-                                  style: TextStyle(
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.w600,
-                                    color: isDark ? Colors.grey.shade300 : Colors.blueGrey.shade700,
+                                Expanded(
+                                  child: Text(
+                                    'Progres Energi Mental',
+                                    style: TextStyle(
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.w600,
+                                      color: isDark ? Colors.grey.shade300 : Colors.blueGrey.shade700,
+                                    ),
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
                                   ),
                                 ),
+                                const SizedBox(width: 8),
                                 Text(
                                   '$userXp / $nextLevelXp XP',
                                   style: TextStyle(
@@ -518,20 +535,27 @@ class _DashboardScreenState extends State<DashboardScreen> with AutomaticKeepAli
                 const SizedBox(height: 12),
                 GlassCard(
                   padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 12),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      _buildEmojiButton('happy', '😊', AppColors.moodHappy, 'Senang'),
-                      _buildEmojiButton('neutral', '😐', AppColors.moodNeutral, 'Calm'),
-                      _buildEmojiButton('sad', '😢', AppColors.moodSad, 'Sedih'),
-                      _buildEmojiButton('angry', '😠', AppColors.moodAngry, 'Marah'),
-                      _buildEmojiButton('anxious', '😰', AppColors.moodAnxious, 'Cemas'),
-                    ],
+                  child: SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        _buildEmojiButton('happy', '😊', AppColors.moodHappy, 'Senang'),
+                        const SizedBox(width: 12),
+                        _buildEmojiButton('neutral', '😐', AppColors.moodNeutral, 'Calm'),
+                        const SizedBox(width: 12),
+                        _buildEmojiButton('sad', '😢', AppColors.moodSad, 'Sedih'),
+                        const SizedBox(width: 12),
+                        _buildEmojiButton('angry', '😠', AppColors.moodAngry, 'Marah'),
+                        const SizedBox(width: 12),
+                        _buildEmojiButton('anxious', '😰', AppColors.moodAnxious, 'Cemas'),
+                      ],
+                    ),
                   ),
                 ),
                 const SizedBox(height: 24),
 
-                // Daily AI Quote Card
+                // Daily Quote Card
                 GlassCard(
                   gradient: LinearGradient(
                     colors: isDark
@@ -543,12 +567,12 @@ class _DashboardScreenState extends State<DashboardScreen> with AutomaticKeepAli
                     children: [
                       Row(
                         children: [
-                          const Icon(Icons.auto_awesome_rounded, color: AppColors.primary, size: 20),
+                          const Icon(Icons.format_quote_rounded, color: AppColors.primary, size: 24),
                           const SizedBox(width: 8),
                           Text(
-                            'Wawasan AI Hari Ini',
+                            'Afirmasi Hari Ini',
                             style: TextStyle(
-                              fontSize: 14,
+                              fontSize: 15,
                               fontWeight: FontWeight.bold,
                               color: isDark ? Colors.grey.shade200 : Colors.blueGrey.shade700,
                             ),
@@ -648,20 +672,25 @@ class _DashboardScreenState extends State<DashboardScreen> with AutomaticKeepAli
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 250),
         curve: Curves.easeInOut,
-        width: 60,
-        padding: const EdgeInsets.symmetric(vertical: 14),
+        width: 65,
+        padding: const EdgeInsets.symmetric(vertical: 16),
         decoration: BoxDecoration(
-          color: isDark ? color.withOpacity(0.15) : color.withOpacity(0.1),
-          borderRadius: BorderRadius.circular(20),
+          color: isDark ? const Color(0xFF1E293B) : Colors.white,
+          borderRadius: BorderRadius.circular(16),
           border: Border.all(
             color: color.withOpacity(0.5),
-            width: 1.5,
+            width: 2.0,
           ),
           boxShadow: [
             BoxShadow(
-              color: color.withOpacity(0.1),
+              color: color.withOpacity(0.25),
               blurRadius: 10,
-              offset: const Offset(0, 4),
+              offset: const Offset(0, 6),
+            ),
+            BoxShadow(
+              color: Colors.black.withOpacity(0.05),
+              blurRadius: 4,
+              offset: const Offset(0, 2),
             ),
           ],
         ),
@@ -669,9 +698,9 @@ class _DashboardScreenState extends State<DashboardScreen> with AutomaticKeepAli
           children: [
             Text(
               emoji,
-              style: const TextStyle(fontSize: 26),
+              style: const TextStyle(fontSize: 32),
             ),
-            const SizedBox(height: 8),
+            const SizedBox(height: 10),
             Text(
               name,
               style: TextStyle(

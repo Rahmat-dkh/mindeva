@@ -752,13 +752,10 @@ class _JournalScreenState extends State<JournalScreen> with AutomaticKeepAliveCl
           ),
         ),
       ),
-      floatingActionButton: Padding(
-        padding: const EdgeInsets.only(bottom: 100), // Keep it above floating nav bar
-        child: FloatingActionButton(
-          onPressed: () => _openJournalComposer(),
-          backgroundColor: AppColors.primary,
-          child: const Icon(Icons.edit_note_rounded, color: Colors.white, size: 30),
-        ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () => _openJournalComposer(),
+        backgroundColor: AppColors.primary,
+        child: const Icon(Icons.edit_note_rounded, color: Colors.white, size: 30),
       ),
     );
   }
@@ -851,15 +848,9 @@ class _JournalScreenState extends State<JournalScreen> with AutomaticKeepAliveCl
           decoration: BoxDecoration(
             color: isDark ? const Color(0xFF1E293B) : Colors.white,
             borderRadius: BorderRadius.circular(20),
-            border: Border(
-              left: BorderSide(color: moodColor, width: 5),
-              top: BorderSide(color: Colors.grey.withOpacity(0.15), width: 1),
-              right: BorderSide(color: Colors.grey.withOpacity(0.15), width: 1),
-              bottom: BorderSide(color: Colors.grey.withOpacity(0.15), width: 1),
-            ),
+            border: Border.all(color: moodColor.withOpacity(0.3), width: 1.5),
             boxShadow: [
-              BoxShadow(color: moodColor.withOpacity(0.10), blurRadius: 12, offset: const Offset(0, 4)),
-              BoxShadow(color: Colors.black.withOpacity(0.04), blurRadius: 8, offset: const Offset(0, 2)),
+              BoxShadow(color: moodColor.withOpacity(0.08), blurRadius: 10, offset: const Offset(0, 4)),
             ],
           ),
           child: Column(

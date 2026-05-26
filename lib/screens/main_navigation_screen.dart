@@ -7,9 +7,8 @@ import '../providers/mood_provider.dart';
 import '../providers/journal_provider.dart';
 import '../providers/streak_provider.dart';
 import 'dashboard_screen.dart';
-import 'mood_tracker_screen.dart';
-import 'journal_screen.dart';
-import 'calendar_screen.dart';
+import 'history_screen.dart';
+import 'therapy_screen.dart';
 import 'profile_screen.dart';
 
 class MainNavigationScreen extends StatefulWidget {
@@ -32,9 +31,8 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
     _pageController = PageController(initialPage: _currentIndex);
     _screens = [
       const DashboardScreen(),
-      const MoodTrackerScreen(),
-      const JournalScreen(),
-      const CalendarScreen(),
+      const HistoryScreen(),
+      const TherapyScreen(),
       const ProfileScreen(),
     ];
     
@@ -83,7 +81,6 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Scaffold(
-      extendBody: true, // Membuat scaffold mengalir di bawah Bottom Navigation Bar
       body: PageView(
         controller: _pageController,
         onPageChanged: (index) {
@@ -94,37 +91,27 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
         children: _screens,
       ),
       bottomNavigationBar: Container(
-        margin: const EdgeInsets.only(left: 20, right: 20, bottom: 20),
-        height: 72,
+        padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewPadding.bottom),
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(24),
+          color: isDark ? const Color(0xFF1E293B) : Colors.white,
           boxShadow: [
             BoxShadow(
-              color: isDark ? Colors.black.withOpacity(0.4) : AppColors.primary.withOpacity(0.12),
-              blurRadius: 20,
-              offset: const Offset(0, 10),
+              color: isDark ? Colors.black.withOpacity(0.4) : AppColors.primary.withOpacity(0.08),
+              blurRadius: 15,
+              offset: const Offset(0, -5),
             ),
           ],
         ),
-        child: ClipRRect(
-          borderRadius: BorderRadius.circular(24),
-          child: BackdropFilter(
-            filter: ImageFilter.blur(sigmaX: 15, sigmaY: 15),
-            child: Container(
-              color: isDark
-                  ? const Color(0xFF1E293B).withOpacity(0.8)
-                  : Colors.white.withOpacity(0.85),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  _buildNavItem(0, Icons.home_rounded, 'Home'),
-                  _buildNavItem(1, Icons.emoji_emotions_rounded, 'Mood'),
-                  _buildNavItem(2, Icons.book_rounded, 'Jurnal'),
-                  _buildNavItem(3, Icons.calendar_month_rounded, 'Kalender'),
-                  _buildNavItem(4, Icons.person_rounded, 'Profil'),
-                ],
-              ),
-            ),
+        child: SizedBox(
+          height: 70,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              _buildNavItem(0, Icons.home_rounded, 'Home'),
+              _buildNavItem(1, Icons.history_rounded, 'Riwayat'),
+              _buildNavItem(2, Icons.psychology_rounded, 'Terapi'),
+              _buildNavItem(3, Icons.person_rounded, 'Profil'),
+            ],
           ),
         ),
       ),

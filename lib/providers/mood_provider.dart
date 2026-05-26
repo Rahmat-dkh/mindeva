@@ -138,7 +138,10 @@ class MoodProvider extends ChangeNotifier {
       authProvider.updateUserStats(streak: 1);
     } else {
       final lastDate = DateTime.parse(lastStreakDate);
-      final difference = DateTime.now().difference(lastDate).inDays;
+      final now = DateTime.now();
+      final todayMidnight = DateTime(now.year, now.month, now.day);
+      final lastMidnight = DateTime(lastDate.year, lastDate.month, lastDate.day);
+      final difference = todayMidnight.difference(lastMidnight).inDays;
 
       if (difference == 1) {
         // Melanjutkan streak

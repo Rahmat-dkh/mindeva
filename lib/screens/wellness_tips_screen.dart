@@ -45,6 +45,41 @@ class WellnessTipsScreen extends StatelessWidget {
         icon: Icons.nights_stay_rounded,
         color: AppColors.moodSad,
       ),
+      WellnessTipData(
+        category: "Mindfulness",
+        title: "Makan dengan Penuh Kesadaran",
+        description: "Cobalah satu waktu makan tanpa distraksi layar HP atau TV. Rasakan betul tekstur, aroma, dan rasa setiap gigitan. Ini membantu menurunkan level kortisol (hormon stres).",
+        icon: Icons.restaurant_rounded,
+        color: AppColors.moodHappy,
+      ),
+      WellnessTipData(
+        category: "Habit Building",
+        title: "Aturan 2 Menit untuk Rasa Malas",
+        description: "Jika suatu tugas bisa diselesaikan dalam 2 menit, lakukan sekarang juga! Jangan ditunda. Kebiasaan ini sangat ampuh mencegah penumpukan stres di akhir minggu.",
+        icon: Icons.timer_rounded,
+        color: AppColors.moodAnxious,
+      ),
+      WellnessTipData(
+        category: "Physical Health",
+        title: "Hubungan Antara Postur dan Mood",
+        description: "Saat merasa sedih, secara tidak sadar kita sering membungkuk. Cobalah berdiri tegak, tarik bahu ke belakang, dan angkat dagu. Postur yang baik dapat 'menipu' otak untuk merasa lebih percaya diri.",
+        icon: Icons.accessibility_new_rounded,
+        color: AppColors.primary,
+      ),
+      WellnessTipData(
+        category: "Social Connection",
+        title: "Kekuatan Bercerita",
+        description: "Jangan memendam masalah sendirian. Menulis jurnal memang bagus, tapi membaginya dengan psikolog atau teman terpercaya dapat memberikan validasi dan sudut pandang baru yang mencerahkan.",
+        icon: Icons.people_alt_rounded,
+        color: AppColors.moodNeutral,
+      ),
+      WellnessTipData(
+        category: "Gratitude",
+        title: "Jurnal Syukur 3 Hal Sehari",
+        description: "Setiap malam sebelum tidur, sebutkan 3 hal kecil yang membuat Anda tersenyum hari ini. Fokus pada hal positif sebelum tidur akan memprogram ulang otak untuk lebih optimis di pagi hari.",
+        icon: Icons.auto_awesome_rounded,
+        color: AppColors.moodHappy,
+      ),
     ];
 
     return Scaffold(

@@ -27,6 +27,7 @@ dependencies:
   shared_preferences: ^2.3.2
   intl: ^0.20.2
   uuid: ^4.5.1
+  url_launcher: ^6.2.5
 
   # AI Integration (Gemini SDK)
   google_generative_ai: any
