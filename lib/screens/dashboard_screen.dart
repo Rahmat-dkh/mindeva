@@ -11,6 +11,7 @@ import '../models/mood_model.dart';
 import '../widgets/glass_card.dart';
 import 'breathing_screen.dart';
 import 'wellness_tips_screen.dart';
+import 'meditation_screen.dart';
 
 class DashboardScreen extends StatefulWidget {
   const DashboardScreen({super.key});
@@ -44,6 +45,59 @@ class _DashboardScreenState extends State<DashboardScreen> with AutomaticKeepAli
     } else {
       return "Selamat Malam";
     }
+  }
+
+  // Teks Streak berdasarkan hari
+  String _getStreakText(int streak) {
+    if (streak == 0) return '0 Hari Streak';
+    if (streak >= 100 && streak % 100 == 0) {
+      return '$streak Hari Konsisten!';
+    } else if (streak >= 30 && streak % 30 == 0) {
+      return '${streak ~/ 30} Bulan Streak!';
+    } else if (streak >= 7 && streak % 7 == 0) {
+      return '${streak ~/ 7} Minggu Streak!';
+    }
+    return '$streak Hari Streak';
+  }
+
+  // Warna gradasi streak berdasarkan milestone
+  List<Color> _getStreakGradient(int streak) {
+    if (streak >= 100 && streak % 100 == 0) {
+      // Kelipatan 100: emas/kuning mewah
+      return const [Color(0xFFFFD700), Color(0xFFFFA500)];
+    } else if (streak >= 100) {
+      // 100+: ungu premium
+      return const [Color(0xFF7C3AED), Color(0xFFA78BFA)];
+    } else if (streak >= 30) {
+      // 1 Bulan+: merah-oranye api
+      return const [Color(0xFFEF4444), Color(0xFFF97316)];
+    } else if (streak >= 7) {
+      // 1 Minggu+: hijau emerald
+      return const [Color(0xFF059669), Color(0xFF34D399)];
+    }
+    // Default: biru
+    return const [Color(0xFF3B82F6), Color(0xFF60A5FA)];
+  }
+
+  Color _getStreakShadowColor(int streak) {
+    if (streak >= 100 && streak % 100 == 0) return const Color(0xFFFFD700);
+    if (streak >= 100) return const Color(0xFF7C3AED);
+    if (streak >= 30) return const Color(0xFFEF4444);
+    if (streak >= 7) return const Color(0xFF059669);
+    return Colors.blue;
+  }
+
+  String _getStreakEmoji(int streak) {
+    if (streak >= 100 && streak % 100 == 0) return '🏆';
+    if (streak >= 100) return '💎';
+    if (streak >= 30) return '⚡';
+    if (streak >= 7) return '🌟';
+    return '🔥';
+  }
+
+  Color _getStreakCheckColor(int streak) {
+    final gradient = _getStreakGradient(streak);
+    return gradient[0];
   }
 
   // Sapaan Icon
@@ -367,152 +421,372 @@ class _DashboardScreenState extends State<DashboardScreen> with AutomaticKeepAli
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // ===== PREMIUM HERO HEADER =====
-                Container(
-                  width: double.infinity,
-                  padding: const EdgeInsets.all(20),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(24),
-                    gradient: const LinearGradient(
-                      begin: Alignment.topLeft,
-                      end: Alignment.bottomRight,
-                      colors: [
-                        AppColors.primary,
-                        AppColors.primaryLight,
-                      ],
-                    ),
-                    boxShadow: [
-                      BoxShadow(
-                        color: AppColors.primary.withOpacity(0.35),
-                        blurRadius: 20,
-                        offset: const Offset(0, 10),
+                // ===== NEW HEADER =====
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    // Dynamic Profile Picture / Initial
+                    Container(
+                      width: 48,
+                      height: 48,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: AppColors.primary.withOpacity(0.15),
+                        border: Border.all(color: Colors.white, width: 2),
+                        image: user?.profileImage != null && user!.profileImage!.isNotEmpty
+                            ? DecorationImage(
+                                image: NetworkImage(user.profileImage!),
+                                fit: BoxFit.cover,
+                              )
+                            : null,
                       ),
-                    ],
-                  ),
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Row(
-                              children: [
-                                Icon(_getGreetingIcon(), color: Colors.white70, size: 16),
-                                const SizedBox(width: 6),
-                                Text(
-                                  _getTimeBasedGreeting(),
-                                  style: const TextStyle(fontSize: 13, color: Colors.white70),
+                      child: user?.profileImage == null || user!.profileImage!.isEmpty
+                          ? Center(
+                              child: Text(
+                                user?.name.isNotEmpty == true ? user!.name[0].toUpperCase() : 'M',
+                                style: const TextStyle(
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.bold,
+                                  color: AppColors.primary,
                                 ),
-                              ],
-                            ),
-                            const SizedBox(height: 4),
-                            Text(
-                              user?.name ?? 'Sobat Mindeva',
-                              style: const TextStyle(
-                                fontSize: 22,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.white,
                               ),
-                            ),
-                            const SizedBox(height: 10),
-                            Container(
-                              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                              decoration: BoxDecoration(
-                                color: Colors.white.withOpacity(0.2),
-                                borderRadius: BorderRadius.circular(12),
-                              ),
-                              child: Row(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  const Text('🔥', style: TextStyle(fontSize: 14)),
-                                  const SizedBox(width: 4),
-                                  Text(
-                                    '${user?.streak ?? 0} Hari Streak',
-                                    style: const TextStyle(
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 12,
-                                    ),
+                            )
+                          : null,
+                    ),
+                    const SizedBox(width: 16),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            '${_getTimeBasedGreeting()},',
+                            style: TextStyle(fontSize: 12, color: isDark ? Colors.grey.shade400 : Colors.blueGrey.shade600),
+                          ),
+                          const SizedBox(height: 2),
+                          Row(
+                            children: [
+                              Flexible(
+                                child: Text(
+                                  user?.name ?? 'Sobat Mindeva',
+                                  style: TextStyle(
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.bold,
+                                    color: isDark ? Colors.white : Colors.blueGrey.shade900,
                                   ),
-                                ],
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              ),
+                              const Text(' 👋', style: TextStyle(fontSize: 18)),
+                            ],
+                          ),
+                          const SizedBox(height: 2),
+                          Text(
+                            'Yuk, rawat dirimu hari ini 💙',
+                            style: TextStyle(fontSize: 12, color: isDark ? Colors.grey.shade400 : Colors.blueGrey.shade500),
+                          ),
+                        ],
+                      ),
+                    ),
+                    GestureDetector(
+                      onTap: () {
+                        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Tidak ada notifikasi baru.')));
+                      },
+                      child: Container(
+                        padding: const EdgeInsets.all(12),
+                        decoration: BoxDecoration(
+                          color: isDark ? Colors.white.withOpacity(0.05) : Colors.white,
+                          borderRadius: BorderRadius.circular(18),
+                          boxShadow: [
+                            if (!isDark)
+                              BoxShadow(color: Colors.black.withOpacity(0.03), blurRadius: 10, offset: const Offset(0, 4)),
+                          ],
+                        ),
+                        child: Stack(
+                          children: [
+                            const Icon(Icons.notifications_none_rounded, color: Colors.blueGrey),
+                            Positioned(
+                              right: 2,
+                              top: 2,
+                              child: Container(
+                                width: 8,
+                                height: 8,
+                                decoration: BoxDecoration(color: Colors.red, shape: BoxShape.circle, border: Border.all(color: Colors.white, width: 1.5)),
                               ),
                             ),
                           ],
                         ),
                       ),
-                      // Decorative icon
-                      Container(
-                        padding: const EdgeInsets.all(14),
-                        decoration: BoxDecoration(
-                          color: Colors.white.withOpacity(0.2),
-                          shape: BoxShape.circle,
-                        ),
-                        child: const Icon(Icons.psychology_rounded, color: Colors.white, size: 36),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 24),
+
+                // ===== STREAK CARD =====
+                Builder(builder: (context) {
+                  final streak = user?.streak ?? 0;
+                  final gradientColors = _getStreakGradient(streak);
+                  final shadowColor = _getStreakShadowColor(streak);
+                  final streakEmoji = _getStreakEmoji(streak);
+                  final checkColor = _getStreakCheckColor(streak);
+
+                  return Container(
+                    width: double.infinity,
+                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(20),
+                      gradient: LinearGradient(
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                        colors: gradientColors,
                       ),
+                      boxShadow: [
+                        BoxShadow(color: shadowColor.withOpacity(0.35), blurRadius: 18, offset: const Offset(0, 8)),
+                      ],
+                    ),
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Row(
+                                children: [
+                                  Text(streakEmoji, style: const TextStyle(fontSize: 20)),
+                                  const SizedBox(width: 8),
+                                  Text(
+                                    _getStreakText(streak),
+                                    style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white),
+                                  ),
+                                ],
+                              ),
+                              const SizedBox(height: 4),
+                              Text(
+                                'Pertahankan streak mu!',
+                                style: TextStyle(fontSize: 12, color: Colors.white.withOpacity(0.9)),
+                              ),
+                              const SizedBox(height: 12),
+                              // Days Row (dynamic based on current weekday)
+                              Builder(builder: (context) {
+                                final dayLabels = ['M', 'S', 'S', 'R', 'K', 'J', 'S'];
+                                final todayIdx = DateTime.now().weekday - 1;
+                                final completedDays = streak >= 7 ? todayIdx + 1 : (streak > todayIdx + 1 ? todayIdx + 1 : streak);
+
+                                return Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: dayLabels.asMap().entries.map((entry) {
+                                    int idx = entry.key;
+                                    String day = entry.value;
+                                    bool isCompleted = idx < completedDays;
+                                    bool isToday = idx == todayIdx;
+                                    return Container(
+                                      width: 24,
+                                      height: 24,
+                                      decoration: BoxDecoration(
+                                        color: isCompleted ? Colors.white : Colors.white.withOpacity(0.15),
+                                        shape: BoxShape.circle,
+                                        border: Border.all(
+                                          color: isToday ? Colors.white : Colors.transparent,
+                                          width: isToday ? 2 : 0,
+                                        ),
+                                      ),
+                                      child: Center(
+                                        child: isCompleted
+                                          ? Icon(Icons.check, color: checkColor, size: 12)
+                                          : Text(day, style: const TextStyle(color: Colors.white, fontSize: 10)),
+                                      ),
+                                    );
+                                  }).toList(),
+                                );
+                              }),
+                            ],
+                          ),
+                        ),
+                        const SizedBox(width: 12),
+                        // HD 3D Flame/Icon
+                        Container(
+                          width: 60,
+                          height: 60,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            gradient: const RadialGradient(
+                              colors: [Colors.white30, Colors.transparent],
+                              center: Alignment(-0.3, -0.3),
+                              radius: 0.8,
+                            ),
+                            border: Border.all(color: Colors.white.withOpacity(0.4), width: 1.5),
+                            boxShadow: [
+                              BoxShadow(color: Colors.white.withOpacity(0.2), blurRadius: 15, spreadRadius: 5),
+                            ],
+                          ),
+                          child: Stack(
+                            alignment: Alignment.center,
+                            children: [
+                              Positioned(
+                                bottom: 8,
+                                child: Container(
+                                  width: 30,
+                                  height: 6,
+                                  decoration: BoxDecoration(
+                                    color: Colors.white.withOpacity(0.3),
+                                    borderRadius: BorderRadius.circular(10),
+                                  ),
+                                ),
+                              ),
+                              Text(streakEmoji, style: const TextStyle(fontSize: 32, shadows: [
+                                Shadow(color: Colors.orangeAccent, blurRadius: 15)
+                              ])),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  );
+                }),
+                const SizedBox(height: 16),
+
+                // ===== LEVEL PROGRESS CARD =====
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                  decoration: BoxDecoration(
+                    color: isDark ? AppColors.surfaceDark : Colors.white,
+                    borderRadius: BorderRadius.circular(20),
+                    boxShadow: [
+                      if (!isDark)
+                        BoxShadow(color: Colors.black.withOpacity(0.03), blurRadius: 10, offset: const Offset(0, 4)),
                     ],
                   ),
-                ),
-                const SizedBox(height: 20),
-
-                // Gamification (XP Progress Bar)
-                GlassCard(
-                  padding: const EdgeInsets.all(16),
                   child: Row(
                     children: [
                       Container(
                         padding: const EdgeInsets.all(10),
                         decoration: BoxDecoration(
-                          color: AppColors.primary.withOpacity(0.15),
-                          shape: BoxShape.circle,
+                          color: Colors.blue.shade50,
+                          borderRadius: BorderRadius.circular(14),
                         ),
-                        child: Text(
-                          'Lv.$currentLevel',
-                          style: const TextStyle(
-                            color: AppColors.primary,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 16,
-                          ),
-                        ),
+                        child: const Icon(Icons.star_rounded, color: Colors.blue, size: 28),
                       ),
-                      const SizedBox(width: 14),
+                      const SizedBox(width: 16),
                       Expanded(
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
                                 Expanded(
-                                  child: Text(
-                                    'Progres Energi Mental',
-                                    style: TextStyle(
-                                      fontSize: 12,
-                                      fontWeight: FontWeight.w600,
-                                      color: isDark ? Colors.grey.shade300 : Colors.blueGrey.shade700,
-                                    ),
-                                    maxLines: 1,
-                                    overflow: TextOverflow.ellipsis,
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        'Lv. $currentLevel',
+                                        style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: isDark ? Colors.blueAccent : Colors.blue.shade700),
+                                      ),
+                                      Text(
+                                        'Progres Energi',
+                                        style: TextStyle(fontSize: 11, color: isDark ? Colors.grey.shade400 : Colors.blueGrey.shade500),
+                                      ),
+                                    ],
                                   ),
                                 ),
-                                const SizedBox(width: 8),
                                 Text(
                                   '$userXp / $nextLevelXp XP',
-                                  style: TextStyle(
-                                    fontSize: 11,
-                                    color: isDark ? Colors.grey.shade400 : Colors.blueGrey.shade500,
-                                  ),
+                                  style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold, color: isDark ? Colors.grey.shade300 : Colors.blueGrey.shade700),
                                 ),
                               ],
                             ),
-                            const SizedBox(height: 8),
+                            const SizedBox(height: 6),
                             ClipRRect(
                               borderRadius: BorderRadius.circular(4),
                               child: LinearProgressIndicator(
                                 value: levelProgress,
                                 minHeight: 6,
-                                color: AppColors.primary,
-                                backgroundColor: isDark ? Colors.grey.shade800 : Colors.grey.shade200,
+                                color: Colors.blue,
+                                backgroundColor: Colors.blue.shade100,
+                              ),
+                            ),
+                            const SizedBox(height: 4),
+                            Text(
+                              '${nextLevelXp - userXp} XP lagi ke Level ${currentLevel + 1}',
+                              style: TextStyle(fontSize: 11, color: isDark ? Colors.grey.shade400 : Colors.blueGrey.shade500),
+                            ),
+                          ],
+                        ),
+                      ),
+                      const SizedBox(width: 16),
+                      Container(
+                        padding: const EdgeInsets.all(8),
+                        decoration: BoxDecoration(
+                          color: Colors.purple.shade50,
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: const Icon(Icons.card_giftcard_rounded, color: Colors.purple, size: 20),
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 24),
+
+                // ===== MOOD SELECTOR =====
+                Text(
+                  'Bagaimana perasaanmu sekarang?',
+                  style: TextStyle(
+                    fontSize: 15,
+                    fontWeight: FontWeight.bold,
+                    color: isDark ? Colors.white : Colors.blueGrey.shade900,
+                  ),
+                ),
+                const SizedBox(height: 16),
+                Row(
+                  children: [
+                    Expanded(child: _buildEmojiButton('happy', '😊', Colors.green, 'Senang', 'Semangat')),
+                    const SizedBox(width: 8),
+                    Expanded(child: _buildEmojiButton('neutral', '😐', Colors.blue, 'Calm', 'Biasa')),
+                    const SizedBox(width: 8),
+                    Expanded(child: _buildEmojiButton('sad', '😢', Colors.purple, 'Sedih', 'Peluk')),
+                    const SizedBox(width: 8),
+                    Expanded(child: _buildEmojiButton('angry', '😠', Colors.red, 'Marah', 'Kesal')),
+                    const SizedBox(width: 8),
+                    Expanded(child: _buildEmojiButton('anxious', '😰', Colors.orange, 'Cemas', 'Gelisah')),
+                  ],
+                ),
+                
+                const SizedBox(height: 16),
+                
+                // ===== AFIRMASI HARI INI =====
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+                  decoration: BoxDecoration(
+                    color: isDark ? AppColors.surfaceDark : Colors.white,
+                    borderRadius: BorderRadius.circular(16),
+                    boxShadow: [
+                      if (!isDark)
+                        BoxShadow(color: Colors.black.withOpacity(0.03), blurRadius: 10, offset: const Offset(0, 4)),
+                    ],
+                  ),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Text(
+                        '"',
+                        style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold, color: Colors.blueAccent, height: 1.0),
+                      ),
+                      const SizedBox(width: 10),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const Text(
+                              'Afirmasi Hari Ini',
+                              style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: Colors.blueAccent),
+                            ),
+                            const SizedBox(height: 4),
+                            Text(
+                              _getMoodBasedQuote(lastMood),
+                              style: TextStyle(
+                                fontSize: 12, 
+                                fontStyle: FontStyle.italic, 
+                                color: isDark ? Colors.grey.shade300 : Colors.blueGrey.shade800, 
+                                height: 1.4
                               ),
                             ),
                           ],
@@ -523,119 +797,73 @@ class _DashboardScreenState extends State<DashboardScreen> with AutomaticKeepAli
                 ),
                 const SizedBox(height: 24),
 
-                // Emojis Mood Selector Card
-                Text(
-                  'Bagaimana perasaanmu sekarang?',
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                    color: isDark ? Colors.white : Colors.blueGrey.shade800,
-                  ),
-                ),
-                const SizedBox(height: 12),
-                GlassCard(
-                  padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 12),
-                  child: SingleChildScrollView(
-                    scrollDirection: Axis.horizontal,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        _buildEmojiButton('happy', '😊', AppColors.moodHappy, 'Senang'),
-                        const SizedBox(width: 12),
-                        _buildEmojiButton('neutral', '😐', AppColors.moodNeutral, 'Calm'),
-                        const SizedBox(width: 12),
-                        _buildEmojiButton('sad', '😢', AppColors.moodSad, 'Sedih'),
-                        const SizedBox(width: 12),
-                        _buildEmojiButton('angry', '😠', AppColors.moodAngry, 'Marah'),
-                        const SizedBox(width: 12),
-                        _buildEmojiButton('anxious', '😰', AppColors.moodAnxious, 'Cemas'),
-                      ],
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 24),
-
-                // Daily Quote Card
-                GlassCard(
-                  gradient: LinearGradient(
-                    colors: isDark
-                        ? [const Color(0xFF312E81).withOpacity(0.4), const Color(0xFF1E1B4B).withOpacity(0.4)]
-                        : [AppColors.primary.withOpacity(0.08), AppColors.primaryLight.withOpacity(0.08)],
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        children: [
-                          const Icon(Icons.format_quote_rounded, color: AppColors.primary, size: 24),
-                          const SizedBox(width: 8),
-                          Text(
-                            'Afirmasi Hari Ini',
-                            style: TextStyle(
-                              fontSize: 15,
-                              fontWeight: FontWeight.bold,
-                              color: isDark ? Colors.grey.shade200 : Colors.blueGrey.shade700,
-                            ),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 12),
-                      Text(
-                        _getMoodBasedQuote(lastMood),
-                        style: TextStyle(
-                          fontSize: 15,
-                          fontStyle: FontStyle.italic,
-                          height: 1.6,
-                          color: isDark ? Colors.grey.shade300 : Colors.blueGrey.shade800,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                const SizedBox(height: 24),
-
-                // Shortcuts (Breathing Exercise & Tips)
-                Text(
-                  'Shortcut Kesehatan',
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                    color: isDark ? Colors.white : Colors.blueGrey.shade800,
-                  ),
-                ),
-                const SizedBox(height: 12),
+                // ===== REKOMENDASI UNTUKMU =====
                 Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Expanded(
-                      child: _buildShortcutCard(
-                        title: 'Latihan Napas',
-                        subtitle: 'Kurangi cemas & stres',
-                        icon: Icons.air_rounded,
-                        color: AppColors.moodNeutral,
+                    Text(
+                      'Rekomendasi untukmu',
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                        color: isDark ? Colors.white : Colors.blueGrey.shade900,
+                      ),
+                    ),
+                    const Text(
+                      'Lihat semua',
+                      style: TextStyle(
+                        fontSize: 13,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.blueAccent,
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 16),
+                SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: Row(
+                    children: [
+                      _buildRecommendationCard(
+                        'Latihan\nPernapasan', 
+                        '3-5 menit', 
+                        Icons.air_rounded, 
+                        Colors.green,
                         onTap: () {
                           Navigator.push(
                             context,
                             MaterialPageRoute(builder: (context) => const BreathingExerciseScreen()),
                           );
-                        },
+                        }
                       ),
-                    ),
-                    const SizedBox(width: 14),
-                    Expanded(
-                      child: _buildShortcutCard(
-                        title: 'Tips Wellness',
-                        subtitle: 'Panduan self care',
-                        icon: Icons.eco_rounded,
-                        color: AppColors.moodHappy,
+                      const SizedBox(width: 12),
+                      _buildRecommendationCard(
+                        'Tips Wellness', 
+                        'Panduan self care', 
+                        Icons.eco_rounded, 
+                        Colors.purple,
                         onTap: () {
                           Navigator.push(
                             context,
                             MaterialPageRoute(builder: (context) => const WellnessTipsScreen()),
                           );
-                        },
+                        }
                       ),
-                    ),
-                  ],
+                      const SizedBox(width: 12),
+                      _buildRecommendationCard(
+                        'Meditasi\nSingkat', 
+                        '10 menit', 
+                        Icons.self_improvement_rounded, 
+                        Colors.blue,
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) => const MeditationScreen()),
+                          );
+                        }
+                      ),
+                    ],
+                  ),
                 ),
                 const SizedBox(height: 24),
 
@@ -664,97 +892,135 @@ class _DashboardScreenState extends State<DashboardScreen> with AutomaticKeepAli
     );
   }
 
-  Widget _buildEmojiButton(String moodKey, String emoji, Color color, String name) {
+  Widget _buildEmojiButton(String moodKey, String emoji, Color color, String name, String subtitle) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
+    final isSelected = _selectedMood == moodKey;
     
     return GestureDetector(
-      onTap: () => _showMoodNoteBottomSheet(moodKey),
+      onTap: () {
+        setState(() {
+          _selectedMood = moodKey;
+        });
+        // You can still call bottom sheet here or keep it simple selection
+        _showMoodNoteBottomSheet(moodKey);
+      },
       child: AnimatedContainer(
-        duration: const Duration(milliseconds: 250),
-        curve: Curves.easeInOut,
-        width: 65,
-        padding: const EdgeInsets.symmetric(vertical: 16),
+        duration: const Duration(milliseconds: 200),
+        padding: const EdgeInsets.symmetric(vertical: 10),
         decoration: BoxDecoration(
-          color: isDark ? const Color(0xFF1E293B) : Colors.white,
+          color: isDark ? AppColors.surfaceDark : Colors.white,
           borderRadius: BorderRadius.circular(16),
           border: Border.all(
-            color: color.withOpacity(0.5),
-            width: 2.0,
+            color: isSelected ? color : (isDark ? Colors.grey.shade800 : Colors.transparent),
+            width: isSelected ? 2.0 : 1.0,
           ),
           boxShadow: [
             BoxShadow(
-              color: color.withOpacity(0.25),
-              blurRadius: 10,
-              offset: const Offset(0, 6),
+              color: isSelected ? color.withOpacity(0.3) : Colors.black.withOpacity(0.08),
+              blurRadius: isSelected ? 12 : 8,
+              offset: const Offset(0, 4),
             ),
-            BoxShadow(
-              color: Colors.black.withOpacity(0.05),
-              blurRadius: 4,
-              offset: const Offset(0, 2),
-            ),
+            if (!isSelected && !isDark)
+              const BoxShadow(
+                color: Colors.white,
+                blurRadius: 4,
+                offset: Offset(-2, -2),
+              ),
           ],
         ),
-        child: Column(
+        child: Stack(
+          alignment: Alignment.center,
+          clipBehavior: Clip.none,
           children: [
-            Text(
-              emoji,
-              style: const TextStyle(fontSize: 32),
+            Column(
+              children: [
+                Text(emoji, style: const TextStyle(fontSize: 32)),
+                const SizedBox(height: 8),
+                Text(
+                  name,
+                  style: TextStyle(
+                    fontSize: 12,
+                    fontWeight: FontWeight.bold,
+                    color: isSelected ? color : (isDark ? Colors.grey.shade300 : Colors.blueGrey.shade500),
+                  ),
+                ),
+                const SizedBox(height: 2),
+                Text(
+                  subtitle,
+                  style: TextStyle(
+                    fontSize: 9,
+                    color: isDark ? Colors.grey.shade500 : Colors.grey.shade400,
+                  ),
+                  textAlign: TextAlign.center,
+                  maxLines: 1,
+                  overflow: TextOverflow.visible,
+                ),
+              ],
             ),
-            const SizedBox(height: 10),
-            Text(
-              name,
-              style: TextStyle(
-                fontSize: 11,
-                fontWeight: FontWeight.bold,
-                color: isDark ? Colors.white : Colors.blueGrey.shade800,
+            if (isSelected)
+              Positioned(
+                top: -8,
+                right: -4,
+                child: Container(
+                  padding: const EdgeInsets.all(2),
+                  decoration: BoxDecoration(
+                    color: color,
+                    shape: BoxShape.circle,
+                  ),
+                  child: const Icon(Icons.check, color: Colors.white, size: 10),
+                ),
               ),
-            ),
           ],
         ),
       ),
     );
   }
 
-  Widget _buildShortcutCard({
-    required String title,
-    required String subtitle,
-    required IconData icon,
-    required Color color,
-    required VoidCallback onTap,
-  }) {
+  Widget _buildRecommendationCard(String title, String subtitle, IconData icon, Color color, {required VoidCallback onTap}) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
-
     return GestureDetector(
       onTap: onTap,
-      child: GlassCard(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+      child: Container(
+        width: 170,
+        padding: const EdgeInsets.all(12),
+        decoration: BoxDecoration(
+          color: isDark ? color.withOpacity(0.15) : color.withOpacity(0.1),
+          borderRadius: BorderRadius.circular(16),
+        ),
+        child: Row(
           children: [
             Container(
               padding: const EdgeInsets.all(8),
               decoration: BoxDecoration(
-                color: color.withOpacity(0.15),
-                borderRadius: BorderRadius.circular(12),
+                color: isDark ? AppColors.surfaceDark : Colors.white,
+                borderRadius: BorderRadius.circular(10),
               ),
               child: Icon(icon, color: color, size: 24),
             ),
-            const SizedBox(height: 14),
-            Text(
-              title,
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 14,
-                color: isDark ? Colors.white : Colors.blueGrey.shade800,
+            const SizedBox(width: 12),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    title,
+                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12, color: color, height: 1.2),
+                  ),
+                  const SizedBox(height: 2),
+                  Text(
+                    subtitle,
+                    style: TextStyle(fontSize: 10, color: isDark ? Colors.grey.shade400 : Colors.blueGrey.shade500),
+                  ),
+                ],
               ),
             ),
-            const SizedBox(height: 4),
-            Text(
-              subtitle,
-              style: TextStyle(
-                fontSize: 11,
-                color: isDark ? Colors.grey.shade400 : Colors.blueGrey.shade500,
+            Container(
+              padding: const EdgeInsets.all(4),
+              decoration: BoxDecoration(
+                color: color,
+                shape: BoxShape.circle,
               ),
+              child: const Icon(Icons.play_arrow_rounded, color: Colors.white, size: 16),
             ),
           ],
         ),

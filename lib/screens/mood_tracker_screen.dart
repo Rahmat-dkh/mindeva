@@ -484,7 +484,7 @@ class _MoodTrackerScreenState extends State<MoodTrackerScreen> with AutomaticKee
             children: [
               // ===== PREMIUM HEADER =====
               Padding(
-                padding: const EdgeInsets.only(left: 20, right: 20, top: 20, bottom: 4),
+                padding: const EdgeInsets.only(left: 20, right: 20, top: 12, bottom: 0),
                 child: Row(
                   children: [
                     Expanded(
@@ -494,16 +494,16 @@ class _MoodTrackerScreenState extends State<MoodTrackerScreen> with AutomaticKee
                           Text(
                             'Riwayat Emosi',
                             style: TextStyle(
-                              fontSize: 26,
+                              fontSize: 20,
                               fontWeight: FontWeight.bold,
                               color: isDark ? Colors.white : Colors.blueGrey.shade800,
                             ),
                           ),
-                          const SizedBox(height: 4),
+                          const SizedBox(height: 2),
                           Text(
-                            'Perjalanan perasaanmu dari waktu ke waktu',
+                            'Perjalanan perasaanmu',
                             style: TextStyle(
-                              fontSize: 13,
+                              fontSize: 12,
                               color: isDark ? Colors.grey.shade400 : Colors.blueGrey.shade500,
                             ),
                           ),
@@ -624,166 +624,146 @@ class _MoodTrackerScreenState extends State<MoodTrackerScreen> with AutomaticKee
     final formattedTime = DateFormat('HH:mm').format(log.createdAt);
 
     return Container(
-      margin: const EdgeInsets.only(bottom: 16),
+      margin: const EdgeInsets.only(bottom: 12),
       decoration: BoxDecoration(
-        gradient: LinearGradient(
-          colors: isDark
-              ? [moodColor.withOpacity(0.12), AppColors.surfaceDark]
-              : [moodColor.withOpacity(0.06), Colors.white],
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-        ),
-        borderRadius: BorderRadius.circular(22),
-        border: Border.all(color: moodColor.withOpacity(0.25), width: 1.5),
+        color: isDark ? AppColors.surfaceDark : Colors.white,
+        borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: moodColor.withOpacity(0.08),
-            blurRadius: 12,
+            color: Colors.black.withOpacity(0.04),
+            blurRadius: 10,
             offset: const Offset(0, 4),
           ),
         ],
       ),
-      child: Padding(
-        padding: const EdgeInsets.all(18),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Top Row
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Expanded(
-                  child: Row(
-                    children: [
-                      // Big emoji with colored bg
-                      Container(
-                        width: 52,
-                        height: 52,
-                        decoration: BoxDecoration(
-                          color: moodColor.withOpacity(0.15),
-                          shape: BoxShape.circle,
-                          border: Border.all(color: moodColor.withOpacity(0.3), width: 2),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(16),
+        child: Container(
+          decoration: BoxDecoration(
+            border: Border(left: BorderSide(color: moodColor, width: 6)),
+          ),
+          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Top Row
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Emoji circle
+                  Container(
+                    width: 44,
+                    height: 44,
+                    decoration: BoxDecoration(
+                      color: moodColor.withOpacity(0.15),
+                      shape: BoxShape.circle,
+                    ),
+                    child: Center(child: Text(emoji, style: const TextStyle(fontSize: 24))),
+                  ),
+                  const SizedBox(width: 12),
+                  // Mood name & Date
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          moodName,
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 16,
+                            color: isDark ? Colors.white : Colors.blueGrey.shade900,
+                          ),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
                         ),
-                        child: Center(child: Text(emoji, style: const TextStyle(fontSize: 26))),
-                      ),
-                      const SizedBox(width: 14),
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
+                        const SizedBox(height: 4),
+                        Row(
                           children: [
-                            Text(
-                              moodName,
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 17,
-                                color: isDark ? Colors.white : Colors.blueGrey.shade800,
+                            Icon(Icons.access_time_rounded, size: 14, color: Colors.grey.shade500),
+                            const SizedBox(width: 4),
+                            Expanded(
+                              child: Text(
+                                '$formattedTime • $formattedDate',
+                                style: TextStyle(fontSize: 12, color: Colors.grey.shade500),
+                                overflow: TextOverflow.ellipsis,
                               ),
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                            const SizedBox(height: 3),
-                            Wrap(
-                              crossAxisAlignment: WrapCrossAlignment.center,
-                              spacing: 6,
-                              runSpacing: 4,
-                              children: [
-                                Row(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    Icon(Icons.access_time_rounded, size: 12, color: Colors.grey.shade500),
-                                    const SizedBox(width: 4),
-                                    Text(
-                                      formattedTime,
-                                      style: TextStyle(fontSize: 11, color: Colors.grey.shade500, fontWeight: FontWeight.w600),
-                                    ),
-                                  ],
-                                ),
-                                Container(
-                                  width: 3,
-                                  height: 3,
-                                  decoration: BoxDecoration(
-                                    color: Colors.grey.shade400,
-                                    shape: BoxShape.circle,
-                                  ),
-                                ),
-                                Text(
-                                  formattedDate,
-                                  style: TextStyle(fontSize: 11, color: Colors.grey.shade500),
-                                  maxLines: 1,
-                                  overflow: TextOverflow.ellipsis,
-                                ),
-                              ],
                             ),
                           ],
+                        ),
+                      ],
+                    ),
+                  ),
+                  // Action buttons
+                  Row(
+                    children: [
+                      _buildIconBtn(Icons.edit_outlined, Colors.blueGrey.shade400, () => _showEditMoodDialog(log)),
+                      const SizedBox(width: 8),
+                      _buildIconBtn(Icons.delete_outline_rounded, Colors.redAccent.withOpacity(0.7), () => _confirmDeleteMood(log)),
+                    ],
+                  ),
+                ],
+              ),
+              
+              if (log.note.isNotEmpty) ...[
+                const SizedBox(height: 12),
+                Container(
+                  width: double.infinity,
+                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+                  decoration: BoxDecoration(
+                    color: moodColor.withOpacity(0.08),
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: Text(
+                          log.note,
+                          style: TextStyle(
+                            fontSize: 13,
+                            height: 1.4,
+                            color: isDark ? Colors.grey.shade300 : Colors.blueGrey.shade800,
+                          ),
+                        ),
+                      ),
+                      Icon(Icons.chevron_right_rounded, color: Colors.grey.shade400, size: 18),
+                    ],
+                  ),
+                ),
+              ],
+              
+              const SizedBox(height: 10),
+              // AI Analysis Button
+              GestureDetector(
+                onTap: () {
+                  HapticFeedback.lightImpact();
+                  _showAIAnalysisDialog(log);
+                },
+                child: Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                  decoration: BoxDecoration(
+                    color: Colors.transparent,
+                    borderRadius: BorderRadius.circular(8),
+                    border: Border.all(color: moodColor.withOpacity(0.3)),
+                  ),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(Icons.auto_awesome_rounded, color: moodColor, size: 14),
+                      const SizedBox(width: 6),
+                      Text(
+                        'Analisis AI',
+                        style: TextStyle(
+                          color: moodColor,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 12,
                         ),
                       ),
                     ],
                   ),
                 ),
-                const SizedBox(width: 10),
-                // Action buttons
-                Row(
-                  children: [
-                    _buildIconBtn(Icons.edit_outlined, Colors.blueGrey.shade400, () => _showEditMoodDialog(log)),
-                    const SizedBox(width: 4),
-                    _buildIconBtn(Icons.delete_outline_rounded, Colors.redAccent.withOpacity(0.7), () => _confirmDeleteMood(log)),
-                  ],
-                ),
-              ],
-            ),
-
-            if (log.note.isNotEmpty) ...[
-              const SizedBox(height: 14),
-              Container(
-                padding: const EdgeInsets.all(12),
-                decoration: BoxDecoration(
-                  color: isDark ? Colors.black12 : Colors.white.withOpacity(0.6),
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: Text(
-                  log.note,
-                  style: TextStyle(
-                    fontSize: 13.5,
-                    height: 1.5,
-                    color: isDark ? Colors.grey.shade300 : Colors.blueGrey.shade700,
-                  ),
-                ),
               ),
             ],
-
-            const SizedBox(height: 14),
-            // AI Analysis Button
-            GestureDetector(
-              onTap: () {
-                HapticFeedback.lightImpact();
-                _showAIAnalysisDialog(log);
-              },
-              child: Container(
-                padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 9),
-                decoration: BoxDecoration(
-                  color: AppColors.primary.withOpacity(0.1),
-                  borderRadius: BorderRadius.circular(14),
-                  border: Border.all(color: AppColors.primary.withOpacity(0.2)),
-                ),
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    const Icon(Icons.auto_awesome_rounded, color: AppColors.primary, size: 15),
-                    const SizedBox(width: 7),
-                    Text(
-                      log.aiAnalysis != null ? 'Lihat Analisis AI Gemini ✨' : 'Analisis AI belum tersedia',
-                      style: const TextStyle(
-                        color: AppColors.primary,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 12,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ],
+          ),
         ),
       ),
     );
@@ -796,7 +776,7 @@ class _MoodTrackerScreenState extends State<MoodTrackerScreen> with AutomaticKee
         padding: const EdgeInsets.all(8),
         decoration: BoxDecoration(
           color: color.withOpacity(0.1),
-          borderRadius: BorderRadius.circular(10),
+          shape: BoxShape.circle,
         ),
         child: Icon(icon, color: color, size: 18),
       ),

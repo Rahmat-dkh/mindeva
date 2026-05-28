@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import '../models/user_model.dart';
 import '../core/config.dart';
+import '../services/local_storage_service.dart';
 
 class AuthProvider extends ChangeNotifier {
   UserModel? _user;
@@ -21,6 +23,9 @@ class AuthProvider extends ChangeNotifier {
     notifyListeners();
     try {
       _user = await AppConfig.authRepository.getCurrentUser();
+      if (_user != null) {
+        await _checkAndIncrementStreak();
+      }
     } catch (e) {
       _errorMessage = e.toString();
     } finally {
@@ -29,12 +34,66 @@ class AuthProvider extends ChangeNotifier {
     }
   }
 
+  // Cek dan tambah streak jika belum login hari ini
+  Future<void> _checkAndIncrementStreak() async {
+    if (_user == null) return;
+    final today = DateTime.now();
+    final todayStr = '${today.year}-${today.month.toString().padLeft(2, '0')}-${today.day.toString().padLeft(2, '0')}';
+    final lastStreakDate = LocalStorageService.getLastStreakDate();
+
+    if (lastStreakDate == todayStr) return; // Sudah login hari ini
+
+    // Tambah streak +1 setiap hari login baru (tidak pernah berkurang)
+    int newStreak;
+    if (lastStreakDate != null) {
+      final last = DateTime.tryParse(lastStreakDate);
+      if (last != null) {
+        final diff = today.difference(last).inDays;
+        if (diff >= 1) {
+          // Hari baru: tambah streak +1
+          newStreak = (_user!.streak) + 1;
+        } else {
+          return; // Hari sama, skip
+        }
+      } else {
+        newStreak = (_user!.streak) + 1;
+      }
+    } else {
+      // Pertama kali login, streak tetap dari data atau mulai 1
+      newStreak = _user!.streak > 0 ? _user!.streak : 1;
+    }
+
+    // Simpan tanggal hari ini
+    await LocalStorageService.saveLastStreakDate(todayStr);
+
+    // Update streak di local state
+    _user = _user!.copyWith(streak: newStreak);
+
+    // Simpan ke local storage
+    await LocalStorageService.saveUser(_user!.toMap()..['userId'] = _user!.userId);
+
+    // Jika Firebase aktif, update ke Firestore juga
+    if (AppConfig.useFirebase) {
+      try {
+        await FirebaseFirestore.instance
+            .collection('users')
+            .doc(_user!.userId)
+            .update({'streak': newStreak});
+      } catch (_) {
+        // Gagal update firebase, lanjut saja
+      }
+    }
+
+    notifyListeners();
+  }
+
   Future<bool> login(String email, String password) async {
     _isLoading = true;
     _errorMessage = null;
     notifyListeners();
     try {
       _user = await AppConfig.authRepository.signIn(email, password);
+      await _checkAndIncrementStreak();
       notifyListeners();
       return true;
     } catch (e) {

@@ -78,19 +78,49 @@ class _CalendarScreenState extends State<CalendarScreen> with AutomaticKeepAlive
         ),
         child: SafeArea(
           child: SingleChildScrollView(
-            padding: const EdgeInsets.only(left: 20, right: 20, top: 16, bottom: 100),
+            padding: const EdgeInsets.only(left: 20, right: 20, top: 12, bottom: 100),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  'Kalender Emosi',
-                  style: TextStyle(
-                    fontSize: 24,
-                    fontWeight: FontWeight.bold,
-                    color: isDark ? Colors.white : Colors.blueGrey.shade800,
-                  ),
+              // ===== PREMIUM HEADER =====
+              Padding(
+                padding: const EdgeInsets.only(bottom: 12),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Kalender Emosi',
+                            style: TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                              color: isDark ? Colors.white : Colors.blueGrey.shade800,
+                            ),
+                          ),
+                          const SizedBox(height: 4),
+                          Text(
+                            'Pantau pola emosimu setiap harinya.',
+                            style: TextStyle(
+                              fontSize: 12,
+                              color: isDark ? Colors.grey.shade400 : Colors.blueGrey.shade500,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Container(
+                      padding: const EdgeInsets.all(8),
+                      decoration: BoxDecoration(
+                        color: AppColors.primary.withOpacity(0.1),
+                        shape: BoxShape.circle,
+                      ),
+                      child: const Icon(Icons.calendar_month_rounded, color: AppColors.primary, size: 36),
+                    ),
+                  ],
                 ),
-                const SizedBox(height: 14),
+              ),
 
                 // Table Calendar Card
                 GlassCard(
@@ -309,71 +339,91 @@ class _CalendarScreenState extends State<CalendarScreen> with AutomaticKeepAlive
   Widget _buildDayLogItem(MoodModel log) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     String emoji = '😐';
+    String moodName = 'Netral';
     Color color = AppColors.moodNeutral;
 
     if (log.mood == 'happy') {
       emoji = '😊';
+      moodName = 'Senang';
       color = AppColors.moodHappy;
     } else if (log.mood == 'sad') {
       emoji = '😢';
+      moodName = 'Sedih';
       color = AppColors.moodSad;
     } else if (log.mood == 'angry') {
       emoji = '😠';
+      moodName = 'Marah';
       color = AppColors.moodAngry;
     } else if (log.mood == 'anxious') {
       emoji = '😰';
+      moodName = 'Cemas';
       color = AppColors.moodAnxious;
     }
 
-    return IntrinsicHeight(
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          // Timeline Node
-          SizedBox(
-            width: 40,
-            child: Column(
-              children: [
-                Container(
-                  width: 32,
-                  height: 32,
-                  decoration: BoxDecoration(
-                    color: color.withOpacity(0.15),
-                    shape: BoxShape.circle,
-                    border: Border.all(color: color, width: 2),
-                  ),
-                  child: Center(
-                    child: Text(emoji, style: const TextStyle(fontSize: 16)),
-                  ),
-                ),
-                Expanded(
-                  child: Container(
-                    width: 2,
-                    color: isDark ? Colors.white.withOpacity(0.1) : Colors.blueGrey.withOpacity(0.1),
-                  ),
-                ),
-              ],
-            ),
+    final formattedTime = DateFormat('HH:mm').format(log.createdAt);
+
+    return Container(
+      margin: const EdgeInsets.only(bottom: 14),
+      decoration: BoxDecoration(
+        color: isDark ? AppColors.surfaceDark : Colors.white,
+        borderRadius: BorderRadius.circular(16),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.04),
+            blurRadius: 10,
+            offset: const Offset(0, 4),
           ),
-          const SizedBox(width: 12),
-          // Content Card
-          Expanded(
-            child: Padding(
-              padding: const EdgeInsets.only(bottom: 16),
-              child: GlassCard(
-                padding: const EdgeInsets.all(16),
+        ],
+      ),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(16),
+        child: Container(
+          decoration: BoxDecoration(
+            border: Border(left: BorderSide(color: color, width: 6)),
+          ),
+          padding: const EdgeInsets.all(16),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Emoji circle
+              Container(
+                width: 50,
+                height: 50,
+                decoration: BoxDecoration(
+                  color: color.withOpacity(0.15),
+                  shape: BoxShape.circle,
+                ),
+                child: Center(child: Text(emoji, style: const TextStyle(fontSize: 26))),
+              ),
+              const SizedBox(width: 16),
+              // Content
+              Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      DateFormat('HH:mm').format(log.createdAt),
-                      style: TextStyle(
-                        fontSize: 11, 
-                        fontWeight: FontWeight.bold,
-                        color: color,
-                      ),
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          moodName,
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 16,
+                            color: isDark ? Colors.white : Colors.blueGrey.shade900,
+                          ),
+                        ),
+                        Text(
+                          formattedTime,
+                          style: TextStyle(
+                            fontSize: 12, 
+                            fontWeight: FontWeight.bold,
+                            color: Colors.grey.shade500,
+                          ),
+                        ),
+                      ],
                     ),
-                    const SizedBox(height: 6),
+                    const SizedBox(height: 8),
                     Text(
                       log.note.isNotEmpty ? log.note : "Mencatat mood tanpa keterangan tambahan.",
                       style: TextStyle(
@@ -385,9 +435,9 @@ class _CalendarScreenState extends State<CalendarScreen> with AutomaticKeepAlive
                   ],
                 ),
               ),
-            ),
+            ],
           ),
-        ],
+        ),
       ),
     );
   }

@@ -20,24 +20,24 @@ class HistoryScreen extends StatelessWidget {
             children: [
               // Custom Header Tab Bar
               Container(
-                margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+                margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
                 decoration: BoxDecoration(
                   color: isDark ? Colors.white.withOpacity(0.05) : Colors.white.withOpacity(0.6),
-                  borderRadius: BorderRadius.circular(24),
+                  borderRadius: BorderRadius.circular(20),
                 ),
                 child: TabBar(
                   isScrollable: true,
                   tabAlignment: TabAlignment.start,
                   indicator: BoxDecoration(
                     color: AppColors.primary,
-                    borderRadius: BorderRadius.circular(24),
+                    borderRadius: BorderRadius.circular(20),
                   ),
                   labelColor: Colors.white,
                   unselectedLabelColor: isDark ? Colors.grey.shade400 : Colors.blueGrey.shade600,
-                  labelStyle: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
+                  labelStyle: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13),
                   dividerColor: Colors.transparent,
                   indicatorSize: TabBarIndicatorSize.tab,
-                  labelPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 4),
+                  labelPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 2),
                   tabs: const [
                     Tab(text: 'Mood Harian'),
                     Tab(text: 'Jurnal Refleksi'),
