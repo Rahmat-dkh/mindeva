@@ -20,7 +20,7 @@ class _LoginScreenState extends State<LoginScreen> {
   final _formKey = GlobalKey<FormState>();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
-  
+
   bool _obscurePassword = true;
   bool _rememberMe = false;
 
@@ -44,19 +44,23 @@ class _LoginScreenState extends State<LoginScreen> {
       if (authProvider.user?.role == 'psychologist') {
         Navigator.of(context).pushReplacement(
           PageRouteBuilder(
-            pageBuilder: (context, animation, secondaryAnimation) => const PsychologistDashboardScreen(),
-            transitionsBuilder: (context, animation, secondaryAnimation, child) {
-              return FadeTransition(opacity: animation, child: child);
-            },
+            pageBuilder: (context, animation, secondaryAnimation) =>
+                const PsychologistDashboardScreen(),
+            transitionsBuilder:
+                (context, animation, secondaryAnimation, child) {
+                  return FadeTransition(opacity: animation, child: child);
+                },
           ),
         );
       } else {
         Navigator.of(context).pushReplacement(
           PageRouteBuilder(
-            pageBuilder: (context, animation, secondaryAnimation) => const MainNavigationScreen(),
-            transitionsBuilder: (context, animation, secondaryAnimation, child) {
-              return FadeTransition(opacity: animation, child: child);
-            },
+            pageBuilder: (context, animation, secondaryAnimation) =>
+                const MainNavigationScreen(),
+            transitionsBuilder:
+                (context, animation, secondaryAnimation, child) {
+                  return FadeTransition(opacity: animation, child: child);
+                },
           ),
         );
       }
@@ -68,28 +72,34 @@ class _LoginScreenState extends State<LoginScreen> {
   Future<void> _loginWithGoogle() async {
     final authProvider = Provider.of<AuthProvider>(context, listen: false);
     final success = await authProvider.signInWithGoogle();
-    
+
     if (success && mounted) {
       if (authProvider.user?.role == 'psychologist') {
         Navigator.of(context).pushReplacement(
           PageRouteBuilder(
-            pageBuilder: (context, animation, secondaryAnimation) => const PsychologistDashboardScreen(),
-            transitionsBuilder: (context, animation, secondaryAnimation, child) {
-              return FadeTransition(opacity: animation, child: child);
-            },
+            pageBuilder: (context, animation, secondaryAnimation) =>
+                const PsychologistDashboardScreen(),
+            transitionsBuilder:
+                (context, animation, secondaryAnimation, child) {
+                  return FadeTransition(opacity: animation, child: child);
+                },
           ),
         );
       } else {
         Navigator.of(context).pushReplacement(
           PageRouteBuilder(
-            pageBuilder: (context, animation, secondaryAnimation) => const MainNavigationScreen(),
-            transitionsBuilder: (context, animation, secondaryAnimation, child) {
-              return FadeTransition(opacity: animation, child: child);
-            },
+            pageBuilder: (context, animation, secondaryAnimation) =>
+                const MainNavigationScreen(),
+            transitionsBuilder:
+                (context, animation, secondaryAnimation, child) {
+                  return FadeTransition(opacity: animation, child: child);
+                },
           ),
         );
       }
-    } else if (mounted && authProvider.errorMessage != null && !authProvider.errorMessage!.contains('dibatalkan')) {
+    } else if (mounted &&
+        authProvider.errorMessage != null &&
+        !authProvider.errorMessage!.contains('dibatalkan')) {
       _showErrorSnackBar(authProvider.errorMessage!);
     }
   }
@@ -122,7 +132,10 @@ class _LoginScreenState extends State<LoginScreen> {
               flex: 3,
               child: Container(
                 width: double.infinity,
-                padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 24,
+                  vertical: 16,
+                ),
                 child: SingleChildScrollView(
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -184,7 +197,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
               ),
             ),
-            
+
             // Bottom Section (White Rounded Container)
             Expanded(
               flex: 5,
@@ -192,10 +205,14 @@ class _LoginScreenState extends State<LoginScreen> {
                 width: double.infinity,
                 decoration: BoxDecoration(
                   color: isDark ? AppColors.surfaceDark : Colors.white,
-                  borderRadius: const BorderRadius.vertical(top: Radius.circular(32)),
+                  borderRadius: const BorderRadius.vertical(
+                    top: Radius.circular(32),
+                  ),
                 ),
                 child: ClipRRect(
-                  borderRadius: const BorderRadius.vertical(top: Radius.circular(32)),
+                  borderRadius: const BorderRadius.vertical(
+                    top: Radius.circular(32),
+                  ),
                   child: SingleChildScrollView(
                     padding: const EdgeInsets.fromLTRB(24, 32, 24, 24),
                     child: Column(
@@ -217,14 +234,19 @@ class _LoginScreenState extends State<LoginScreen> {
                               "Don't Have An Account? ",
                               style: TextStyle(
                                 fontSize: 13,
-                                color: isDark ? Colors.grey.shade400 : Colors.blueGrey.shade400,
+                                color: isDark
+                                    ? Colors.grey.shade400
+                                    : Colors.blueGrey.shade400,
                               ),
                             ),
                             GestureDetector(
                               onTap: () {
                                 Navigator.push(
                                   context,
-                                  MaterialPageRoute(builder: (context) => const RegisterScreen()),
+                                  MaterialPageRoute(
+                                    builder: (context) =>
+                                        const RegisterScreen(),
+                                  ),
                                 );
                               },
                               child: Text(
@@ -239,7 +261,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           ],
                         ),
                         const SizedBox(height: 32),
-                        
+
                         Form(
                           key: _formKey,
                           child: Column(
@@ -248,55 +270,90 @@ class _LoginScreenState extends State<LoginScreen> {
                               // Email field
                               Container(
                                 decoration: BoxDecoration(
-                                  color: isDark ? Colors.white.withOpacity(0.05) : Colors.grey.shade50,
+                                  color: isDark
+                                      ? Colors.white.withOpacity(0.05)
+                                      : Colors.grey.shade50,
                                   borderRadius: BorderRadius.circular(16),
-                                  border: Border.all(color: isDark ? Colors.white.withOpacity(0.1) : Colors.grey.shade200),
+                                  border: Border.all(
+                                    color: isDark
+                                        ? Colors.white.withOpacity(0.1)
+                                        : Colors.grey.shade200,
+                                  ),
                                 ),
                                 child: TextFormField(
                                   controller: _emailController,
                                   keyboardType: TextInputType.emailAddress,
                                   style: TextStyle(fontSize: 14),
                                   validator: (value) {
-                                    if (value == null || value.isEmpty) return 'Email tidak boleh kosong';
-                                    if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(value)) {
+                                    if (value == null || value.isEmpty)
+                                      return 'Email tidak boleh kosong';
+                                    if (!RegExp(
+                                      r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$',
+                                    ).hasMatch(value)) {
                                       return 'Masukkan format email yang valid';
                                     }
                                     return null;
                                   },
                                   decoration: InputDecoration(
                                     hintText: 'Enter your email address',
-                                    hintStyle: TextStyle(color: Colors.grey.shade400, fontSize: 14),
-                                    prefixIcon: const Icon(Icons.person_outline, color: Colors.grey, size: 20),
+                                    hintStyle: TextStyle(
+                                      color: Colors.grey.shade400,
+                                      fontSize: 14,
+                                    ),
+                                    prefixIcon: const Icon(
+                                      Icons.person_outline,
+                                      color: Colors.grey,
+                                      size: 20,
+                                    ),
                                     border: InputBorder.none,
-                                    contentPadding: const EdgeInsets.symmetric(vertical: 16),
+                                    contentPadding: const EdgeInsets.symmetric(
+                                      vertical: 16,
+                                    ),
                                   ),
                                 ),
                               ),
                               const SizedBox(height: 16),
-                              
+
                               // Password field
                               Container(
                                 decoration: BoxDecoration(
-                                  color: isDark ? Colors.white.withOpacity(0.05) : Colors.grey.shade50,
+                                  color: isDark
+                                      ? Colors.white.withOpacity(0.05)
+                                      : Colors.grey.shade50,
                                   borderRadius: BorderRadius.circular(16),
-                                  border: Border.all(color: isDark ? Colors.white.withOpacity(0.1) : Colors.grey.shade200),
+                                  border: Border.all(
+                                    color: isDark
+                                        ? Colors.white.withOpacity(0.1)
+                                        : Colors.grey.shade200,
+                                  ),
                                 ),
                                 child: TextFormField(
                                   controller: _passwordController,
                                   obscureText: _obscurePassword,
                                   style: TextStyle(fontSize: 14),
                                   validator: (value) {
-                                    if (value == null || value.isEmpty) return 'Password tidak boleh kosong';
-                                    if (value.length < 6) return 'Password minimal 6 karakter';
+                                    if (value == null || value.isEmpty)
+                                      return 'Password tidak boleh kosong';
+                                    if (value.length < 6)
+                                      return 'Password minimal 6 karakter';
                                     return null;
                                   },
                                   decoration: InputDecoration(
                                     hintText: 'Password',
-                                    hintStyle: TextStyle(color: Colors.grey.shade400, fontSize: 14),
-                                    prefixIcon: const Icon(Icons.lock_outline, color: Colors.grey, size: 20),
+                                    hintStyle: TextStyle(
+                                      color: Colors.grey.shade400,
+                                      fontSize: 14,
+                                    ),
+                                    prefixIcon: const Icon(
+                                      Icons.lock_outline,
+                                      color: Colors.grey,
+                                      size: 20,
+                                    ),
                                     suffixIcon: IconButton(
                                       icon: Icon(
-                                        _obscurePassword ? Icons.visibility_off_outlined : Icons.visibility_outlined,
+                                        _obscurePassword
+                                            ? Icons.visibility_off_outlined
+                                            : Icons.visibility_outlined,
                                         color: Colors.grey,
                                         size: 20,
                                       ),
@@ -307,7 +364,9 @@ class _LoginScreenState extends State<LoginScreen> {
                                       },
                                     ),
                                     border: InputBorder.none,
-                                    contentPadding: const EdgeInsets.symmetric(vertical: 16),
+                                    contentPadding: const EdgeInsets.symmetric(
+                                      vertical: 16,
+                                    ),
                                   ),
                                 ),
                               ),
@@ -315,7 +374,8 @@ class _LoginScreenState extends State<LoginScreen> {
 
                               // Remember Me & Forgot Password
                               Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
                                 children: [
                                   Row(
                                     children: [
@@ -325,7 +385,11 @@ class _LoginScreenState extends State<LoginScreen> {
                                         child: Checkbox(
                                           value: _rememberMe,
                                           activeColor: AppColors.primary,
-                                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius: BorderRadius.circular(
+                                              4,
+                                            ),
+                                          ),
                                           onChanged: (val) {
                                             setState(() {
                                               _rememberMe = val ?? false;
@@ -338,7 +402,9 @@ class _LoginScreenState extends State<LoginScreen> {
                                         'Remember Me',
                                         style: TextStyle(
                                           fontSize: 12,
-                                          color: isDark ? Colors.grey.shade400 : Colors.blueGrey.shade400,
+                                          color: isDark
+                                              ? Colors.grey.shade400
+                                              : Colors.blueGrey.shade400,
                                         ),
                                       ),
                                     ],
@@ -347,7 +413,10 @@ class _LoginScreenState extends State<LoginScreen> {
                                     onTap: () {
                                       Navigator.push(
                                         context,
-                                        MaterialPageRoute(builder: (context) => const ForgotPasswordScreen()),
+                                        MaterialPageRoute(
+                                          builder: (context) =>
+                                              const ForgotPasswordScreen(),
+                                        ),
                                       );
                                     },
                                     child: Text(
@@ -362,7 +431,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                 ],
                               ),
                               const SizedBox(height: 24),
-                              
+
                               // Login Button
                               CustomButton(
                                 text: 'Login',
@@ -372,37 +441,61 @@ class _LoginScreenState extends State<LoginScreen> {
                             ],
                           ),
                         ),
-                        
+
                         const SizedBox(height: 32),
                         // Divider
                         Row(
                           children: [
-                            Expanded(child: Divider(color: isDark ? Colors.grey.shade800 : Colors.grey.shade200)),
+                            Expanded(
+                              child: Divider(
+                                color: isDark
+                                    ? Colors.grey.shade800
+                                    : Colors.grey.shade200,
+                              ),
+                            ),
                             Padding(
-                              padding: const EdgeInsets.symmetric(horizontal: 16),
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 16,
+                              ),
                               child: Text(
                                 'Or Continue With',
                                 style: TextStyle(
                                   fontSize: 12,
-                                  color: isDark ? Colors.grey.shade500 : Colors.grey.shade400,
+                                  color: isDark
+                                      ? Colors.grey.shade500
+                                      : Colors.grey.shade400,
                                 ),
                               ),
                             ),
-                            Expanded(child: Divider(color: isDark ? Colors.grey.shade800 : Colors.grey.shade200)),
+                            Expanded(
+                              child: Divider(
+                                color: isDark
+                                    ? Colors.grey.shade800
+                                    : Colors.grey.shade200,
+                              ),
+                            ),
                           ],
                         ),
                         const SizedBox(height: 24),
-                        
+
                         // Social Login Buttons
                         SocialLoginButton(
                           text: 'Continue with Google',
-                          icon: const Icon(Icons.g_mobiledata_rounded, color: Colors.blue, size: 36),
-                          backgroundColor: isDark ? Colors.grey.shade900 : Colors.white,
+                          icon: const Icon(
+                            Icons.g_mobiledata_rounded,
+                            color: Colors.blue,
+                            size: 36,
+                          ),
+                          backgroundColor: isDark
+                              ? Colors.grey.shade900
+                              : Colors.white,
                           textColor: isDark ? Colors.white : Colors.black,
-                          borderColor: isDark ? Colors.grey.shade800 : Colors.grey.shade300,
+                          borderColor: isDark
+                              ? Colors.grey.shade800
+                              : Colors.grey.shade300,
                           onTap: _loginWithGoogle,
                         ),
-                        SizedBox(height: MediaQuery.of(context).viewInsets.bottom + 20), // Padding for keyboard
+                        const SizedBox(height: 20),
                       ],
                     ),
                   ),
@@ -415,4 +508,3 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 }
-

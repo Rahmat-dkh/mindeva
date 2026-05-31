@@ -15,7 +15,8 @@ class MoodTrackerScreen extends StatefulWidget {
   State<MoodTrackerScreen> createState() => _MoodTrackerScreenState();
 }
 
-class _MoodTrackerScreenState extends State<MoodTrackerScreen> with AutomaticKeepAliveClientMixin {
+class _MoodTrackerScreenState extends State<MoodTrackerScreen>
+    with AutomaticKeepAliveClientMixin {
   final TextEditingController _editNoteController = TextEditingController();
 
   @override
@@ -29,31 +30,46 @@ class _MoodTrackerScreenState extends State<MoodTrackerScreen> with AutomaticKee
 
   String _getMoodEmoji(String mood) {
     switch (mood) {
-      case 'happy': return '😊';
-      case 'sad': return '😢';
-      case 'angry': return '😠';
-      case 'anxious': return '😰';
-      default: return '😐';
+      case 'happy':
+        return '😊';
+      case 'sad':
+        return '😢';
+      case 'angry':
+        return '😠';
+      case 'anxious':
+        return '😰';
+      default:
+        return '😐';
     }
   }
 
   String _getMoodName(String mood) {
     switch (mood) {
-      case 'happy': return 'Senang';
-      case 'sad': return 'Sedih';
-      case 'angry': return 'Marah';
-      case 'anxious': return 'Cemas';
-      default: return 'Netral';
+      case 'happy':
+        return 'Senang';
+      case 'sad':
+        return 'Sedih';
+      case 'angry':
+        return 'Marah';
+      case 'anxious':
+        return 'Cemas';
+      default:
+        return 'Netral';
     }
   }
 
   Color _getMoodColor(String mood) {
     switch (mood) {
-      case 'happy': return AppColors.moodHappy;
-      case 'sad': return AppColors.moodSad;
-      case 'angry': return AppColors.moodAngry;
-      case 'anxious': return AppColors.moodAnxious;
-      default: return AppColors.moodNeutral;
+      case 'happy':
+        return AppColors.moodHappy;
+      case 'sad':
+        return AppColors.moodSad;
+      case 'angry':
+        return AppColors.moodAngry;
+      case 'anxious':
+        return AppColors.moodAnxious;
+      default:
+        return AppColors.moodNeutral;
     }
   }
 
@@ -79,7 +95,10 @@ class _MoodTrackerScreenState extends State<MoodTrackerScreen> with AutomaticKee
                 end: Alignment.bottomRight,
               ),
               borderRadius: BorderRadius.circular(28),
-              border: Border.all(color: AppColors.primary.withOpacity(0.2), width: 1.5),
+              border: Border.all(
+                color: AppColors.primary.withOpacity(0.2),
+                width: 1.5,
+              ),
               boxShadow: [
                 BoxShadow(
                   color: AppColors.primary.withOpacity(0.15),
@@ -103,7 +122,11 @@ class _MoodTrackerScreenState extends State<MoodTrackerScreen> with AutomaticKee
                           color: AppColors.primary.withOpacity(0.12),
                           borderRadius: BorderRadius.circular(14),
                         ),
-                        child: const Icon(Icons.auto_awesome_rounded, color: AppColors.primary, size: 22),
+                        child: const Icon(
+                          Icons.auto_awesome_rounded,
+                          color: AppColors.primary,
+                          size: 22,
+                        ),
                       ),
                       const SizedBox(width: 12),
                       Expanded(
@@ -115,18 +138,26 @@ class _MoodTrackerScreenState extends State<MoodTrackerScreen> with AutomaticKee
                               style: TextStyle(
                                 fontWeight: FontWeight.bold,
                                 fontSize: 16,
-                                color: isDark ? Colors.white : Colors.blueGrey.shade800,
+                                color: isDark
+                                    ? Colors.white
+                                    : Colors.blueGrey.shade800,
                               ),
                             ),
                             Text(
                               'Wawasan mendalam tentang emosimu',
-                              style: TextStyle(fontSize: 11, color: Colors.grey.shade500),
+                              style: TextStyle(
+                                fontSize: 11,
+                                color: Colors.grey.shade500,
+                              ),
                             ),
                           ],
                         ),
                       ),
                       IconButton(
-                        icon: Icon(Icons.close_rounded, color: Colors.grey.shade500),
+                        icon: Icon(
+                          Icons.close_rounded,
+                          color: Colors.grey.shade500,
+                        ),
                         onPressed: () => Navigator.pop(context),
                       ),
                     ],
@@ -151,14 +182,21 @@ class _MoodTrackerScreenState extends State<MoodTrackerScreen> with AutomaticKee
                       icon: Icons.bolt_rounded,
                       label: 'Tingkat Stres',
                       child: Row(
-                        children: List.generate(5, (index) => Padding(
-                          padding: const EdgeInsets.only(right: 4),
-                          child: Icon(
-                            index < analysis.stressLevel ? Icons.offline_bolt_rounded : Icons.offline_bolt_outlined,
-                            color: index < analysis.stressLevel ? Colors.orangeAccent : Colors.grey.shade400,
-                            size: 22,
+                        children: List.generate(
+                          5,
+                          (index) => Padding(
+                            padding: const EdgeInsets.only(right: 4),
+                            child: Icon(
+                              index < analysis.stressLevel
+                                  ? Icons.offline_bolt_rounded
+                                  : Icons.offline_bolt_outlined,
+                              color: index < analysis.stressLevel
+                                  ? Colors.orangeAccent
+                                  : Colors.grey.shade400,
+                              size: 22,
+                            ),
                           ),
-                        )),
+                        ),
                       ),
                     ),
                     const SizedBox(height: 14),
@@ -169,7 +207,10 @@ class _MoodTrackerScreenState extends State<MoodTrackerScreen> with AutomaticKee
                       icon: Icons.psychology_rounded,
                       label: 'Kondisi Emosional',
                       child: Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 12,
+                          vertical: 6,
+                        ),
                         decoration: BoxDecoration(
                           color: moodColor.withOpacity(0.12),
                           borderRadius: BorderRadius.circular(12),
@@ -197,7 +238,9 @@ class _MoodTrackerScreenState extends State<MoodTrackerScreen> with AutomaticKee
                           fontStyle: FontStyle.italic,
                           fontSize: 13.5,
                           height: 1.5,
-                          color: isDark ? Colors.grey.shade300 : Colors.blueGrey.shade700,
+                          color: isDark
+                              ? Colors.grey.shade300
+                              : Colors.blueGrey.shade700,
                         ),
                       ),
                     ),
@@ -209,32 +252,42 @@ class _MoodTrackerScreenState extends State<MoodTrackerScreen> with AutomaticKee
                       icon: Icons.eco_rounded,
                       label: 'Saran Self Care',
                       child: Column(
-                        children: analysis.recommendations.map((rec) => Padding(
-                          padding: const EdgeInsets.only(bottom: 8),
-                          child: Row(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Container(
-                                margin: const EdgeInsets.only(top: 4, right: 8),
-                                width: 6, height: 6,
-                                decoration: BoxDecoration(
-                                  color: AppColors.primary,
-                                  shape: BoxShape.circle,
+                        children: analysis.recommendations
+                            .map(
+                              (rec) => Padding(
+                                padding: const EdgeInsets.only(bottom: 8),
+                                child: Row(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Container(
+                                      margin: const EdgeInsets.only(
+                                        top: 4,
+                                        right: 8,
+                                      ),
+                                      width: 6,
+                                      height: 6,
+                                      decoration: BoxDecoration(
+                                        color: AppColors.primary,
+                                        shape: BoxShape.circle,
+                                      ),
+                                    ),
+                                    Expanded(
+                                      child: Text(
+                                        rec,
+                                        style: TextStyle(
+                                          fontSize: 12.5,
+                                          height: 1.4,
+                                          color: isDark
+                                              ? Colors.grey.shade300
+                                              : Colors.blueGrey.shade700,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
                                 ),
                               ),
-                              Expanded(
-                                child: Text(
-                                  rec,
-                                  style: TextStyle(
-                                    fontSize: 12.5,
-                                    height: 1.4,
-                                    color: isDark ? Colors.grey.shade300 : Colors.blueGrey.shade700,
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        )).toList(),
+                            )
+                            .toList(),
                       ),
                     ),
                   ],
@@ -256,7 +309,9 @@ class _MoodTrackerScreenState extends State<MoodTrackerScreen> with AutomaticKee
     return Container(
       padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
-        color: isDark ? Colors.white.withOpacity(0.05) : Colors.white.withOpacity(0.6),
+        color: isDark
+            ? Colors.white.withOpacity(0.05)
+            : Colors.white.withOpacity(0.6),
         borderRadius: BorderRadius.circular(16),
         border: Border.all(color: AppColors.primary.withOpacity(0.1)),
       ),
@@ -272,7 +327,9 @@ class _MoodTrackerScreenState extends State<MoodTrackerScreen> with AutomaticKee
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: 11.5,
-                  color: isDark ? Colors.grey.shade400 : Colors.blueGrey.shade600,
+                  color: isDark
+                      ? Colors.grey.shade400
+                      : Colors.blueGrey.shade600,
                 ),
               ),
             ],
@@ -290,16 +347,66 @@ class _MoodTrackerScreenState extends State<MoodTrackerScreen> with AutomaticKee
     String selectedMood = log.mood;
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
+    Future<void> saveMood(BuildContext sheetContext, String mood) async {
+      final authProvider = Provider.of<AuthProvider>(
+        sheetContext,
+        listen: false,
+      );
+      final moodProvider = Provider.of<MoodProvider>(
+        sheetContext,
+        listen: false,
+      );
+      final userId = authProvider.user?.userId;
+      if (userId == null) return;
+
+      Navigator.pop(sheetContext);
+
+      showDialog(
+        context: this.context,
+        barrierDismissible: false,
+        builder: (ctx) => const Center(
+          child: CircularProgressIndicator(color: AppColors.primary),
+        ),
+      );
+
+      await moodProvider.updateMood(
+        userId: userId,
+        moodId: log.moodId,
+        mood: mood,
+        note: _editNoteController.text,
+      );
+
+      if (mounted) {
+        Navigator.pop(this.context);
+      }
+    }
+
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
       builder: (context) {
+        final mediaQuery = MediaQuery.of(context);
+        final keyboardInset = mediaQuery.viewInsets.bottom;
+        final reportedBottomInset =
+            mediaQuery.viewPadding.bottom > mediaQuery.padding.bottom
+            ? mediaQuery.viewPadding.bottom
+            : mediaQuery.padding.bottom;
+        final bottomSafeArea = keyboardInset > 0
+            ? 16.0
+            : reportedBottomInset > 48
+            ? reportedBottomInset + 16
+            : 96.0;
+
         return Padding(
-          padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+          padding: EdgeInsets.only(bottom: keyboardInset),
           child: StatefulBuilder(
             builder: (context, setSheetState) {
               return Container(
+                constraints: BoxConstraints(
+                  maxHeight:
+                      mediaQuery.size.height - mediaQuery.padding.top - 16,
+                ),
                 decoration: BoxDecoration(
                   gradient: LinearGradient(
                     colors: isDark
@@ -308,132 +415,153 @@ class _MoodTrackerScreenState extends State<MoodTrackerScreen> with AutomaticKee
                     begin: Alignment.topLeft,
                     end: Alignment.bottomRight,
                   ),
-                  borderRadius: const BorderRadius.vertical(top: Radius.circular(30)),
-                  border: Border.all(color: AppColors.primary.withOpacity(0.15)),
+                  borderRadius: const BorderRadius.vertical(
+                    top: Radius.circular(30),
+                  ),
+                  border: Border.all(
+                    color: AppColors.primary.withOpacity(0.15),
+                  ),
                 ),
-                padding: const EdgeInsets.all(24),
-                child: SingleChildScrollView(
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                    // Handle bar
-                    Center(
-                      child: Container(
-                        width: 40, height: 4,
-                        decoration: BoxDecoration(
-                          color: Colors.grey.shade400,
-                          borderRadius: BorderRadius.circular(2),
-                        ),
-                      ),
-                    ),
-                    const SizedBox(height: 20),
-                    Text(
-                      'Edit Catatan Mood',
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 18,
-                        color: isDark ? Colors.white : Colors.blueGrey.shade800,
-                      ),
-                    ),
-                    const SizedBox(height: 20),
-                    // Mood selector
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: ['happy', 'neutral', 'sad', 'angry', 'anxious'].map((key) {
-                        final isSelected = key == selectedMood;
-                        final color = _getMoodColor(key);
-                        return GestureDetector(
-                          onTap: () {
-                            HapticFeedback.selectionClick();
-                            setSheetState(() => selectedMood = key);
-                          },
-                          child: AnimatedContainer(
-                            duration: const Duration(milliseconds: 200),
-                            padding: const EdgeInsets.all(10),
-                            decoration: BoxDecoration(
-                              color: isSelected ? color.withOpacity(0.2) : Colors.transparent,
-                              borderRadius: BorderRadius.circular(14),
-                              border: Border.all(
-                                color: isSelected ? color : Colors.grey.withOpacity(0.2),
-                                width: 1.5,
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Flexible(
+                      child: SingleChildScrollView(
+                        padding: const EdgeInsets.fromLTRB(24, 24, 24, 20),
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            // Handle bar
+                            Center(
+                              child: Container(
+                                width: 40,
+                                height: 4,
+                                decoration: BoxDecoration(
+                                  color: Colors.grey.shade400,
+                                  borderRadius: BorderRadius.circular(2),
+                                ),
                               ),
                             ),
-                            child: Text(_getMoodEmoji(key), style: const TextStyle(fontSize: 26)),
+                            const SizedBox(height: 20),
+                            Text(
+                              'Edit Catatan Mood',
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 18,
+                                color: isDark
+                                    ? Colors.white
+                                    : Colors.blueGrey.shade800,
+                              ),
+                            ),
+                            const SizedBox(height: 20),
+                            // Mood selector
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceAround,
+                              children:
+                                  [
+                                    'happy',
+                                    'neutral',
+                                    'sad',
+                                    'angry',
+                                    'anxious',
+                                  ].map((key) {
+                                    final isSelected = key == selectedMood;
+                                    final color = _getMoodColor(key);
+                                    return GestureDetector(
+                                      onTap: () {
+                                        HapticFeedback.selectionClick();
+                                        setSheetState(() => selectedMood = key);
+                                      },
+                                      child: AnimatedContainer(
+                                        duration: const Duration(
+                                          milliseconds: 200,
+                                        ),
+                                        padding: const EdgeInsets.all(10),
+                                        decoration: BoxDecoration(
+                                          color: isSelected
+                                              ? color.withOpacity(0.2)
+                                              : Colors.transparent,
+                                          borderRadius: BorderRadius.circular(
+                                            14,
+                                          ),
+                                          border: Border.all(
+                                            color: isSelected
+                                                ? color
+                                                : Colors.grey.withOpacity(0.2),
+                                            width: 1.5,
+                                          ),
+                                        ),
+                                        child: Text(
+                                          _getMoodEmoji(key),
+                                          style: const TextStyle(fontSize: 26),
+                                        ),
+                                      ),
+                                    );
+                                  }).toList(),
+                            ),
+                            const SizedBox(height: 20),
+                            // Text field
+                            Container(
+                              decoration: BoxDecoration(
+                                color: isDark ? Colors.black26 : Colors.white70,
+                                borderRadius: BorderRadius.circular(16),
+                                border: Border.all(
+                                  color: AppColors.primary.withOpacity(0.2),
+                                ),
+                              ),
+                              child: TextField(
+                                controller: _editNoteController,
+                                maxLines: 3,
+                                style: TextStyle(
+                                  color: isDark
+                                      ? Colors.white
+                                      : Colors.blueGrey.shade800,
+                                  fontSize: 14,
+                                ),
+                                decoration: InputDecoration(
+                                  hintText: 'Perbarui keluh kesahmu...',
+                                  hintStyle: TextStyle(
+                                    color: Colors.grey.shade400,
+                                  ),
+                                  border: InputBorder.none,
+                                  contentPadding: const EdgeInsets.all(16),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.fromLTRB(24, 0, 24, bottomSafeArea),
+                      child: SizedBox(
+                        width: double.infinity,
+                        child: ElevatedButton(
+                          onPressed: () => saveMood(context, selectedMood),
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: AppColors.primary,
+                            padding: const EdgeInsets.symmetric(vertical: 16),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(16),
+                            ),
+                            elevation: 0,
                           ),
-                        );
-                      }).toList(),
-                    ),
-                    const SizedBox(height: 20),
-                    // Text field
-                    Container(
-                      decoration: BoxDecoration(
-                        color: isDark ? Colors.black26 : Colors.white70,
-                        borderRadius: BorderRadius.circular(16),
-                        border: Border.all(color: AppColors.primary.withOpacity(0.2)),
-                      ),
-                      child: TextField(
-                        controller: _editNoteController,
-                        maxLines: 3,
-                        style: TextStyle(
-                          color: isDark ? Colors.white : Colors.blueGrey.shade800,
-                          fontSize: 14,
-                        ),
-                        decoration: InputDecoration(
-                          hintText: 'Perbarui keluh kesahmu...',
-                          hintStyle: TextStyle(color: Colors.grey.shade400),
-                          border: InputBorder.none,
-                          contentPadding: const EdgeInsets.all(16),
-                        ),
-                      ),
-                    ),
-                    const SizedBox(height: 20),
-                    // Save button
-                    SizedBox(
-                      width: double.infinity,
-                      child: ElevatedButton(
-                        onPressed: () async {
-                          final authProvider = Provider.of<AuthProvider>(context, listen: false);
-                          final moodProvider = Provider.of<MoodProvider>(context, listen: false);
-                          final userId = authProvider.user?.userId;
-                          if (userId != null) {
-                            Navigator.pop(context); // Pop bottom sheet
-                            
-                            // Tampilkan loading dialog dengan parent context
-                            showDialog(
-                              context: this.context,
-                              barrierDismissible: false,
-                              builder: (ctx) => const Center(child: CircularProgressIndicator(color: AppColors.primary)),
-                            );
-                            
-                            await moodProvider.updateMood(
-                              userId: userId,
-                              moodId: log.moodId,
-                              mood: selectedMood,
-                              note: _editNoteController.text,
-                            );
-                            
-                            if (mounted) {
-                              Navigator.pop(this.context); // Tutup loading dialog
-                            }
-                          }
-                        },
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: AppColors.primary,
-                          padding: const EdgeInsets.symmetric(vertical: 16),
-                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-                          elevation: 0,
-                        ),
-                        child: const Text(
-                          'Simpan Perubahan',
-                          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 15),
+                          child: const Text(
+                            'Simpan Perubahan',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 15,
+                            ),
+                          ),
                         ),
                       ),
                     ),
                   ],
                 ),
-              ),
-            );
+              );
             },
           ),
         );
@@ -446,21 +574,41 @@ class _MoodTrackerScreenState extends State<MoodTrackerScreen> with AutomaticKee
       context: context,
       builder: (context) => AlertDialog(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-        title: const Text('Hapus Log Mood', style: TextStyle(fontWeight: FontWeight.bold)),
-        content: const Text('Apakah Anda yakin ingin menghapus catatan mood ini secara permanen?'),
+        title: const Text(
+          'Hapus Log Mood',
+          style: TextStyle(fontWeight: FontWeight.bold),
+        ),
+        content: const Text(
+          'Apakah Anda yakin ingin menghapus catatan mood ini secara permanen?',
+        ),
         actions: [
-          TextButton(onPressed: () => Navigator.pop(context), child: const Text('Batal')),
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Batal'),
+          ),
           TextButton(
             onPressed: () async {
-              final authProvider = Provider.of<AuthProvider>(context, listen: false);
-              final moodProvider = Provider.of<MoodProvider>(context, listen: false);
+              final authProvider = Provider.of<AuthProvider>(
+                context,
+                listen: false,
+              );
+              final moodProvider = Provider.of<MoodProvider>(
+                context,
+                listen: false,
+              );
               final userId = authProvider.user?.userId;
               if (userId != null) {
                 Navigator.pop(context);
                 await moodProvider.deleteMood(userId, log.moodId);
               }
             },
-            child: const Text('Hapus', style: TextStyle(color: Colors.redAccent, fontWeight: FontWeight.bold)),
+            child: const Text(
+              'Hapus',
+              style: TextStyle(
+                color: Colors.redAccent,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
           ),
         ],
       ),
@@ -485,97 +633,119 @@ class _MoodTrackerScreenState extends State<MoodTrackerScreen> with AutomaticKee
           ),
         ),
         child: SafeArea(
-            child: CustomScrollView(
-              slivers: [
-                SliverToBoxAdapter(
-                  child: Padding(
-                    padding: const EdgeInsets.only(left: 20, right: 20, top: 12, bottom: 16),
-                    child: Row(
-                      children: [
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                'Riwayat Emosi',
-                                style: TextStyle(
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.bold,
-                                  color: isDark ? Colors.white : Colors.blueGrey.shade800,
-                                ),
+          child: CustomScrollView(
+            slivers: [
+              SliverToBoxAdapter(
+                child: Padding(
+                  padding: const EdgeInsets.only(
+                    left: 20,
+                    right: 20,
+                    top: 12,
+                    bottom: 16,
+                  ),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              'Riwayat Emosi',
+                              style: TextStyle(
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold,
+                                color: isDark
+                                    ? Colors.white
+                                    : Colors.blueGrey.shade800,
                               ),
-                              const SizedBox(height: 2),
+                            ),
+                            const SizedBox(height: 2),
+                            Text(
+                              'Perjalanan perasaanmu',
+                              style: TextStyle(
+                                fontSize: 12,
+                                color: isDark
+                                    ? Colors.grey.shade400
+                                    : Colors.blueGrey.shade500,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      // Mood stat badge
+                      if (moodProvider.moodLogs.isNotEmpty)
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 14,
+                            vertical: 8,
+                          ),
+                          decoration: BoxDecoration(
+                            gradient: const LinearGradient(
+                              colors: [
+                                AppColors.primary,
+                                AppColors.primaryLight,
+                              ],
+                            ),
+                            borderRadius: BorderRadius.circular(20),
+                            boxShadow: [
+                              BoxShadow(
+                                color: AppColors.primary.withOpacity(0.3),
+                                blurRadius: 10,
+                                offset: const Offset(0, 4),
+                              ),
+                            ],
+                          ),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              const Icon(
+                                Icons.bar_chart_rounded,
+                                color: Colors.white,
+                                size: 16,
+                              ),
+                              const SizedBox(width: 6),
                               Text(
-                                'Perjalanan perasaanmu',
-                                style: TextStyle(
+                                '${moodProvider.moodLogs.length} Entri',
+                                style: const TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold,
                                   fontSize: 12,
-                                  color: isDark ? Colors.grey.shade400 : Colors.blueGrey.shade500,
                                 ),
                               ),
                             ],
                           ),
                         ),
-                        // Mood stat badge
-                        if (moodProvider.moodLogs.isNotEmpty)
-                          Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
-                            decoration: BoxDecoration(
-                              gradient: const LinearGradient(
-                                colors: [AppColors.primary, AppColors.primaryLight],
-                              ),
-                              borderRadius: BorderRadius.circular(20),
-                              boxShadow: [
-                                BoxShadow(
-                                  color: AppColors.primary.withOpacity(0.3),
-                                  blurRadius: 10,
-                                  offset: const Offset(0, 4),
-                                ),
-                              ],
-                            ),
-                            child: Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                const Icon(Icons.bar_chart_rounded, color: Colors.white, size: 16),
-                                const SizedBox(width: 6),
-                                Text(
-                                  '${moodProvider.moodLogs.length} Entri',
-                                  style: const TextStyle(
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 12,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                      ],
-                    ),
+                    ],
                   ),
                 ),
-                // Mood Log List
-                if (moodProvider.isLoading)
-                  const SliverFillRemaining(
-                    child: Center(child: CircularProgressIndicator(color: AppColors.primary)),
-                  )
-                else if (moodProvider.moodLogs.isEmpty)
-                  SliverFillRemaining(
-                    hasScrollBody: false,
-                    child: _buildEmptyState(),
-                  )
-                else
-                  SliverPadding(
-                    padding: const EdgeInsets.only(left: 20, right: 20, bottom: 100),
-                    sliver: SliverList(
-                      delegate: SliverChildBuilderDelegate(
-                        (context, index) {
-                          final log = moodProvider.moodLogs[index];
-                          return _buildMoodLogCard(log, index);
-                        },
-                        childCount: moodProvider.moodLogs.length,
-                      ),
-                    ),
+              ),
+              // Mood Log List
+              if (moodProvider.isLoading)
+                const SliverFillRemaining(
+                  child: Center(
+                    child: CircularProgressIndicator(color: AppColors.primary),
                   ),
-              ],
+                )
+              else if (moodProvider.moodLogs.isEmpty)
+                SliverFillRemaining(
+                  hasScrollBody: false,
+                  child: _buildEmptyState(),
+                )
+              else
+                SliverPadding(
+                  padding: const EdgeInsets.only(
+                    left: 20,
+                    right: 20,
+                    bottom: 100,
+                  ),
+                  sliver: SliverList(
+                    delegate: SliverChildBuilderDelegate((context, index) {
+                      final log = moodProvider.moodLogs[index];
+                      return _buildMoodLogCard(log, index);
+                    }, childCount: moodProvider.moodLogs.length),
+                  ),
+                ),
+            ],
           ),
         ),
       ),
@@ -632,7 +802,10 @@ class _MoodTrackerScreenState extends State<MoodTrackerScreen> with AutomaticKee
     final emoji = _getMoodEmoji(log.mood);
     final moodName = _getMoodName(log.mood);
     final moodColor = _getMoodColor(log.mood);
-    final formattedDate = DateFormat('EEEE, dd MMM yyyy', 'id_ID').format(log.createdAt);
+    final formattedDate = DateFormat(
+      'EEEE, dd MMM yyyy',
+      'id_ID',
+    ).format(log.createdAt);
     final formattedTime = DateFormat('HH:mm').format(log.createdAt);
 
     return Container(
@@ -640,7 +813,12 @@ class _MoodTrackerScreenState extends State<MoodTrackerScreen> with AutomaticKee
       decoration: BoxDecoration(
         color: isDark ? AppColors.surfaceDark : Colors.white,
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: isDark ? Colors.white.withOpacity(0.1) : moodColor.withOpacity(0.25), width: 1.5),
+        border: Border.all(
+          color: isDark
+              ? Colors.white.withOpacity(0.1)
+              : moodColor.withOpacity(0.25),
+          width: 1.5,
+        ),
         boxShadow: [
           BoxShadow(
             color: moodColor.withOpacity(0.15),
@@ -671,7 +849,9 @@ class _MoodTrackerScreenState extends State<MoodTrackerScreen> with AutomaticKee
                       color: moodColor.withOpacity(0.15),
                       shape: BoxShape.circle,
                     ),
-                    child: Center(child: Text(emoji, style: const TextStyle(fontSize: 24))),
+                    child: Center(
+                      child: Text(emoji, style: const TextStyle(fontSize: 24)),
+                    ),
                   ),
                   const SizedBox(width: 12),
                   // Mood name & Date
@@ -684,7 +864,9 @@ class _MoodTrackerScreenState extends State<MoodTrackerScreen> with AutomaticKee
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: 17,
-                            color: isDark ? Colors.white : Colors.blueGrey.shade900,
+                            color: isDark
+                                ? Colors.white
+                                : Colors.blueGrey.shade900,
                           ),
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
@@ -692,12 +874,19 @@ class _MoodTrackerScreenState extends State<MoodTrackerScreen> with AutomaticKee
                         const SizedBox(height: 4),
                         Row(
                           children: [
-                            Icon(Icons.access_time_rounded, size: 14, color: Colors.grey.shade500),
+                            Icon(
+                              Icons.access_time_rounded,
+                              size: 14,
+                              color: Colors.grey.shade500,
+                            ),
                             const SizedBox(width: 4),
                             Expanded(
                               child: Text(
                                 '$formattedTime • $formattedDate',
-                                style: TextStyle(fontSize: 12, color: Colors.grey.shade500),
+                                style: TextStyle(
+                                  fontSize: 12,
+                                  color: Colors.grey.shade500,
+                                ),
                                 overflow: TextOverflow.ellipsis,
                               ),
                             ),
@@ -708,8 +897,14 @@ class _MoodTrackerScreenState extends State<MoodTrackerScreen> with AutomaticKee
                   ),
                   // Action buttons
                   PopupMenuButton<String>(
-                    icon: Icon(Icons.more_horiz_rounded, color: Colors.grey.shade400, size: 20),
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                    icon: Icon(
+                      Icons.more_horiz_rounded,
+                      color: Colors.grey.shade400,
+                      size: 20,
+                    ),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
                     offset: const Offset(0, 40),
                     elevation: 3,
                     onSelected: (value) {
@@ -724,7 +919,11 @@ class _MoodTrackerScreenState extends State<MoodTrackerScreen> with AutomaticKee
                         value: 'edit',
                         child: Row(
                           children: [
-                            Icon(Icons.edit_outlined, size: 18, color: Colors.blueGrey),
+                            Icon(
+                              Icons.edit_outlined,
+                              size: 18,
+                              color: Colors.blueGrey,
+                            ),
                             SizedBox(width: 8),
                             Text('Edit', style: TextStyle(fontSize: 14)),
                           ],
@@ -734,9 +933,19 @@ class _MoodTrackerScreenState extends State<MoodTrackerScreen> with AutomaticKee
                         value: 'delete',
                         child: Row(
                           children: [
-                            Icon(Icons.delete_outline_rounded, size: 18, color: Colors.redAccent),
+                            Icon(
+                              Icons.delete_outline_rounded,
+                              size: 18,
+                              color: Colors.redAccent,
+                            ),
                             SizedBox(width: 8),
-                            Text('Hapus', style: TextStyle(fontSize: 14, color: Colors.redAccent)),
+                            Text(
+                              'Hapus',
+                              style: TextStyle(
+                                fontSize: 14,
+                                color: Colors.redAccent,
+                              ),
+                            ),
                           ],
                         ),
                       ),
@@ -744,12 +953,15 @@ class _MoodTrackerScreenState extends State<MoodTrackerScreen> with AutomaticKee
                   ),
                 ],
               ),
-              
+
               if (log.note.isNotEmpty) ...[
                 const SizedBox(height: 12),
                 Container(
                   width: double.infinity,
-                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 12,
+                    vertical: 10,
+                  ),
                   decoration: BoxDecoration(
                     color: moodColor.withOpacity(0.08),
                     borderRadius: BorderRadius.circular(12),
@@ -762,16 +974,22 @@ class _MoodTrackerScreenState extends State<MoodTrackerScreen> with AutomaticKee
                           style: TextStyle(
                             fontSize: 14,
                             height: 1.5,
-                            color: isDark ? Colors.grey.shade300 : Colors.blueGrey.shade900,
+                            color: isDark
+                                ? Colors.grey.shade300
+                                : Colors.blueGrey.shade900,
                           ),
                         ),
                       ),
-                      Icon(Icons.chevron_right_rounded, color: Colors.grey.shade400, size: 18),
+                      Icon(
+                        Icons.chevron_right_rounded,
+                        color: Colors.grey.shade400,
+                        size: 18,
+                      ),
                     ],
                   ),
                 ),
               ],
-              
+
               const SizedBox(height: 10),
               // AI Analysis Button
               GestureDetector(
@@ -780,7 +998,10 @@ class _MoodTrackerScreenState extends State<MoodTrackerScreen> with AutomaticKee
                   _showAIAnalysisDialog(log);
                 },
                 child: Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 12,
+                    vertical: 6,
+                  ),
                   decoration: BoxDecoration(
                     color: Colors.transparent,
                     borderRadius: BorderRadius.circular(8),
@@ -789,7 +1010,11 @@ class _MoodTrackerScreenState extends State<MoodTrackerScreen> with AutomaticKee
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Icon(Icons.auto_awesome_rounded, color: moodColor, size: 14),
+                      Icon(
+                        Icons.auto_awesome_rounded,
+                        color: moodColor,
+                        size: 14,
+                      ),
                       const SizedBox(width: 6),
                       Text(
                         'Analisis AI',
