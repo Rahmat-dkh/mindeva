@@ -119,105 +119,91 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final authProvider = Provider.of<AuthProvider>(context);
-    final Size size = MediaQuery.of(context).size;
+    final size = MediaQuery.of(context).size;
+    final topPadding = MediaQuery.of(context).padding.top;
+    final bottomPadding = MediaQuery.of(context).viewPadding.bottom;
+    // Tinggi bagian biru: 26% tinggi layar, min 190, max 250
+    final topHeight = (size.height * 0.26).clamp(190.0, 250.0);
 
     return Scaffold(
       backgroundColor: AppColors.primary,
-      body: SafeArea(
-        bottom: false,
+      // resizeToAvoidBottomInset: true (default) → keyboard geser form ke atas otomatis
+      body: SingleChildScrollView(
+        keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
         child: Column(
           children: [
-            // Top Section (Blue)
-            Expanded(
-              flex: 3,
-              child: Container(
-                width: double.infinity,
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 24,
-                  vertical: 16,
+            // ── Top Section (Blue) — tinggi tetap ──
+            SizedBox(
+              width: double.infinity,
+              height: topHeight + topPadding,
+              child: Padding(
+                padding: EdgeInsets.only(
+                  top: topPadding + 16,
+                  left: 24,
+                  right: 24,
+                  bottom: 16,
                 ),
-                child: SingleChildScrollView(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Container(
-                        width: 70,
-                        height: 70,
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(16),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.black.withOpacity(0.1),
-                              blurRadius: 15,
-                              offset: const Offset(0, 5),
-                            ),
-                          ],
-                        ),
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(16),
-                          child: Image.asset(
-                            'assets/logo.png',
-                            fit: BoxFit.cover,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Container(
+                      width: 64,
+                      height: 64,
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(16),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withOpacity(0.1),
+                            blurRadius: 15,
+                            offset: const Offset(0, 5),
                           ),
-                        ),
+                        ],
                       ),
-                      const SizedBox(height: 16),
-                      Text(
-                        'MINDEVA',
-                        style: TextStyle(
-                          fontSize: 24,
-                          fontWeight: FontWeight.w900,
-                          color: Colors.white,
-                          letterSpacing: 2,
-                        ),
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(16),
+                        child: Image.asset('assets/logo.png', fit: BoxFit.cover),
                       ),
-                      const SizedBox(height: 8),
-                      Text(
-                        "Let's Get You Set Up\nfor Success",
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white,
-                          height: 1.3,
-                        ),
+                    ),
+                    const SizedBox(height: 12),
+                    const Text(
+                      'MINDEVA',
+                      style: TextStyle(
+                        fontSize: 22,
+                        fontWeight: FontWeight.w900,
+                        color: Colors.white,
+                        letterSpacing: 2,
                       ),
-                      const SizedBox(height: 8),
-                      Text(
-                        "Organize your thoughts and track your emotional journey easily.",
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          fontSize: 12,
-                          color: Colors.white.withOpacity(0.85),
-                        ),
+                    ),
+                    const SizedBox(height: 6),
+                    Text(
+                      "Let's Get You Set Up for Success",
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w600,
+                        color: Colors.white.withOpacity(0.9),
                       ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
               ),
             ),
 
-            // Bottom Section (White Rounded Container)
-            Expanded(
-              flex: 5,
-              child: Container(
-                width: double.infinity,
-                decoration: BoxDecoration(
-                  color: isDark ? AppColors.surfaceDark : Colors.white,
-                  borderRadius: const BorderRadius.vertical(
-                    top: Radius.circular(32),
-                  ),
+            // ── Bottom Section (White Rounded) ──
+            Container(
+              width: double.infinity,
+              decoration: BoxDecoration(
+                color: isDark ? AppColors.surfaceDark : Colors.white,
+                borderRadius: const BorderRadius.vertical(
+                  top: Radius.circular(32),
                 ),
-                child: ClipRRect(
-                  borderRadius: const BorderRadius.vertical(
-                    top: Radius.circular(32),
-                  ),
-                  child: SingleChildScrollView(
-                    padding: const EdgeInsets.fromLTRB(24, 32, 24, 24),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      children: [
+              ),
+              child: Padding(
+                padding: EdgeInsets.fromLTRB(24, 32, 24, bottomPadding + 48),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
                         const Text(
                           'Login',
                           textAlign: TextAlign.center,
@@ -496,15 +482,13 @@ class _LoginScreenState extends State<LoginScreen> {
                           onTap: _loginWithGoogle,
                         ),
                         const SizedBox(height: 20),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
+                      ],       // tutup children Column dalam Padding
+                    ),         // tutup Column
+                  ),           // tutup Padding
+                ),             // tutup Container
+            ],                 // tutup children Column luar (SingleChildScrollView)
+          ),                   // tutup Column luar
+        ),                     // tutup SingleChildScrollView
+      );                       // tutup return Scaffold
   }
 }

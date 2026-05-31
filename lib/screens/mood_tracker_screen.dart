@@ -388,15 +388,12 @@ class _MoodTrackerScreenState extends State<MoodTrackerScreen>
       builder: (context) {
         final mediaQuery = MediaQuery.of(context);
         final keyboardInset = mediaQuery.viewInsets.bottom;
-        final reportedBottomInset =
-            mediaQuery.viewPadding.bottom > mediaQuery.padding.bottom
-            ? mediaQuery.viewPadding.bottom
-            : mediaQuery.padding.bottom;
+        // Gunakan viewPadding.bottom untuk nav bar Samsung yang gestur/tombol
+        final navBarHeight = mediaQuery.viewPadding.bottom;
+        // Jika keyboard tampil, cukup padding 16; jika tidak, tambah nav bar + 16
         final bottomSafeArea = keyboardInset > 0
             ? 16.0
-            : reportedBottomInset > 48
-            ? reportedBottomInset + 16
-            : 96.0;
+            : navBarHeight + 16.0;
 
         return Padding(
           padding: EdgeInsets.only(bottom: keyboardInset),

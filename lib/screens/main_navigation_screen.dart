@@ -6,6 +6,7 @@ import '../providers/auth_provider.dart';
 import '../providers/mood_provider.dart';
 import '../providers/journal_provider.dart';
 import '../providers/streak_provider.dart';
+import '../widgets/premium_welcome_popup.dart';
 import 'dashboard_screen.dart';
 import 'history_screen.dart';
 import 'therapy_screen.dart';
@@ -39,6 +40,12 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
     // Fetch data setelah frame pertama selesai
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _tryFetchData();
+      // Tampilkan popup premium setelah animasi transisi login selesai
+      Future.delayed(const Duration(milliseconds: 1200), () {
+        if (mounted && context.mounted) {
+          showPremiumWelcomePopup(context);
+        }
+      });
     });
   }
 
