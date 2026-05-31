@@ -43,24 +43,32 @@ class AuthProvider extends ChangeNotifier {
 
     if (lastStreakDate == todayStr) return; // Sudah login hari ini
 
-    // Tambah streak +1 setiap hari login baru (tidak pernah berkurang)
+    // Tambah streak +1 setiap hari login baru, atau reset jika terlewat
     int newStreak;
     if (lastStreakDate != null) {
       final last = DateTime.tryParse(lastStreakDate);
       if (last != null) {
-        final diff = today.difference(last).inDays;
-        if (diff >= 1) {
-          // Hari baru: tambah streak +1
+        final todayMidnight = DateTime(today.year, today.month, today.day);
+        final lastMidnight = DateTime(last.year, last.month, last.day);
+        final diffDays = todayMidnight.difference(lastMidnight).inHours.round() ~/ 24;
+        
+        if (diffDays == 1) {
+          // Hari baru berturut-turut: tambah streak +1
           newStreak = (_user!.streak) + 1;
+        } else if (diffDays > 1) {
+          // Streak putus, reset ke 1
+          newStreak = 1;
         } else {
-          return; // Hari sama, skip
+          return; // Hari sama atau error time, skip
         }
       } else {
         newStreak = (_user!.streak) + 1;
       }
     } else {
-      // Pertama kali login, streak tetap dari data atau mulai 1
+      // Pertama kali login, biarkan streak dari data (atau 1 jika 0)
       newStreak = _user!.streak > 0 ? _user!.streak : 1;
+      // Jika pertama kali login, jangan increment hari ini agar tidak double.
+      // Kita hanya set lastStreakDate ke hari ini.
     }
 
     // Simpan tanggal hari ini
@@ -106,12 +114,12 @@ class AuthProvider extends ChangeNotifier {
     }
   }
 
-  Future<bool> register(String name, String email, String password) async {
+  Future<bool> register(String name, String email, String password, {String role = 'user'}) async {
     _isLoading = true;
     _errorMessage = null;
     notifyListeners();
     try {
-      _user = await AppConfig.authRepository.signUp(name, email, password);
+      _user = await AppConfig.authRepository.signUp(name, email, password, role: role);
       notifyListeners();
       return true;
     } catch (e) {
@@ -190,7 +198,7 @@ class AuthProvider extends ChangeNotifier {
   }
 
   // Menambahkan XP atau update streak dari aktivitas eksternal
-  void updateUserStats({int? addXp, int? streak}) {
+  Future<void> updateUserStats({int? addXp, int? streak}) async {
     if (_user == null) return;
     int currentXp = _user!.xp;
     int currentStreak = _user!.streak;
@@ -199,6 +207,46 @@ class AuthProvider extends ChangeNotifier {
     if (streak != null) currentStreak = streak;
 
     _user = _user!.copyWith(xp: currentXp, streak: currentStreak);
+    
+    // Simpan ke local storage
+    await LocalStorageService.saveUser(_user!.toMap()..['userId'] = _user!.userId);
+
+    // Jika Firebase aktif, update ke Firestore juga
+    if (AppConfig.useFirebase) {
+      try {
+        await FirebaseFirestore.instance
+            .collection('users')
+            .doc(_user!.userId)
+            .update({
+          'xp': currentXp,
+          'streak': currentStreak,
+        });
+      } catch (_) {
+        // Gagal update firebase, lanjut saja
+      }
+    }
+    
+    notifyListeners();
+  }
+
+  // Simulasi upgrade premium
+  Future<void> upgradeToPremium() async {
+    if (_user == null) return;
+    _user = _user!.copyWith(isPremium: true);
+    
+    // Simpan ke local storage
+    await LocalStorageService.saveUser(_user!.toMap()..['userId'] = _user!.userId);
+
+    // Jika Firebase aktif, update ke Firestore juga
+    if (AppConfig.useFirebase) {
+      try {
+        await FirebaseFirestore.instance
+            .collection('users')
+            .doc(_user!.userId)
+            .update({'isPremium': true});
+      } catch (_) {}
+    }
+    
     notifyListeners();
   }
 

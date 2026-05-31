@@ -85,7 +85,7 @@ class JournalProvider extends ChangeNotifier {
       _applyFilterAndSearch();
 
       // Tambah XP (+35 XP) untuk menulis jurnal
-      authProvider.updateUserStats(addXp: 35);
+      await authProvider.updateUserStats(addXp: 35);
 
       return savedJournal;
     } catch (e) {

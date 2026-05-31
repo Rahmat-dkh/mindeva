@@ -612,165 +612,181 @@ class _JournalScreenState extends State<JournalScreen> with AutomaticKeepAliveCl
           ),
         ),
         child: SafeArea(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // ===== PREMIUM HEADER =====
-              Padding(
-                padding: const EdgeInsets.only(left: 20, right: 20, top: 12, bottom: 0),
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            'Jurnal Refleksi',
-                            style: TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold,
-                              color: isDark ? Colors.white : Colors.blueGrey.shade800,
-                            ),
-                          ),
-                          const SizedBox(height: 4),
-                          Text(
-                            'Ruang untuk menulis',
-                            style: TextStyle(
-                              fontSize: 12,
-                              color: isDark ? Colors.grey.shade400 : Colors.blueGrey.shade500,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    // Illustration placeholder (Journal icon)
-                    Container(
-                      padding: const EdgeInsets.all(8),
-                      decoration: BoxDecoration(
-                        color: AppColors.primary.withOpacity(0.1),
-                        shape: BoxShape.circle,
-                      ),
-                      child: const Icon(Icons.menu_book_rounded, color: AppColors.primary, size: 36),
-                    ),
-                  ],
-                ),
-              ),
-              const SizedBox(height: 16),
-
-              // Search Bar & Filter
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20),
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: Container(
-                        decoration: BoxDecoration(
-                          color: isDark ? Colors.white.withOpacity(0.07) : Colors.white,
-                          borderRadius: BorderRadius.circular(18),
-                          border: Border.all(
-                            color: isDark ? Colors.white.withOpacity(0.1) : AppColors.primary.withOpacity(0.15),
-                          ),
-                          boxShadow: [
-                            BoxShadow(
-                              color: AppColors.primary.withOpacity(0.04),
-                              blurRadius: 10,
-                              offset: const Offset(0, 2),
-                            ),
-                          ],
-                        ),
-                        child: TextField(
-                          controller: _searchController,
-                          onChanged: (val) => journalProvider.search(val),
-                          style: TextStyle(
-                            color: isDark ? Colors.white : Colors.blueGrey.shade800,
-                            fontSize: 13,
-                          ),
-                          decoration: InputDecoration(
-                            hintText: 'Cari catatan jurnal...',
-                            hintStyle: TextStyle(color: Colors.grey.shade400, fontSize: 13),
-                            prefixIcon: Icon(Icons.search_rounded, color: Colors.grey.shade400, size: 18),
-                            suffixIcon: _searchController.text.isNotEmpty
-                                ? GestureDetector(
-                                    onTap: () {
-                                      _searchController.clear();
-                                      journalProvider.search('');
-                                    },
-                                    child: Icon(Icons.clear, color: Colors.grey.shade400, size: 16),
-                                  )
-                                : null,
-                            border: InputBorder.none,
-                            contentPadding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
-                          ),
-                        ),
-                      ),
-                    ),
-                    const SizedBox(width: 12),
-                    GestureDetector(
-                      onTap: _selectFilterDate,
-                      child: Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
-                        decoration: BoxDecoration(
-                          color: isDark ? Colors.white.withOpacity(0.07) : Colors.white,
-                          borderRadius: BorderRadius.circular(16),
-                          border: Border.all(
-                            color: isDark ? Colors.white.withOpacity(0.1) : AppColors.primary.withOpacity(0.15),
-                          ),
-                          boxShadow: [
-                            BoxShadow(
-                              color: AppColors.primary.withOpacity(0.04),
-                              blurRadius: 10,
-                              offset: const Offset(0, 2),
-                            ),
-                          ],
-                        ),
+            child: CustomScrollView(
+              slivers: [
+                SliverToBoxAdapter(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      // ===== PREMIUM HEADER =====
+                      Padding(
+                        padding: const EdgeInsets.only(left: 20, right: 20, top: 12, bottom: 0),
                         child: Row(
                           children: [
-                            Icon(Icons.filter_alt_outlined, color: isDark ? Colors.white : Colors.blueGrey.shade800, size: 16),
-                            const SizedBox(width: 4),
-                            Text(
-                              'Filter',
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 13,
-                                color: isDark ? Colors.white : Colors.blueGrey.shade800,
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    'Jurnal Refleksi',
+                                    style: TextStyle(
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.bold,
+                                      color: isDark ? Colors.white : Colors.blueGrey.shade800,
+                                    ),
+                                  ),
+                                  const SizedBox(height: 4),
+                                  Text(
+                                    'Ruang untuk menulis',
+                                    style: TextStyle(
+                                      fontSize: 12,
+                                      color: isDark ? Colors.grey.shade400 : Colors.blueGrey.shade500,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            // Illustration placeholder (Journal icon)
+                            Container(
+                              padding: const EdgeInsets.all(8),
+                              decoration: BoxDecoration(
+                                color: AppColors.primary.withOpacity(0.1),
+                                shape: BoxShape.circle,
+                              ),
+                              child: const Icon(Icons.menu_book_rounded, color: AppColors.primary, size: 36),
+                            ),
+                          ],
+                        ),
+                      ),
+                      const SizedBox(height: 16),
+
+                      // Search Bar & Filter
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 20),
+                        child: Row(
+                          children: [
+                            Expanded(
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  color: isDark ? Colors.white.withOpacity(0.07) : Colors.white,
+                                  borderRadius: BorderRadius.circular(18),
+                                  border: Border.all(
+                                    color: isDark ? Colors.white.withOpacity(0.1) : AppColors.primary.withOpacity(0.15),
+                                  ),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: AppColors.primary.withOpacity(0.04),
+                                      blurRadius: 10,
+                                      offset: const Offset(0, 2),
+                                    ),
+                                  ],
+                                ),
+                                child: TextField(
+                                  controller: _searchController,
+                                  onChanged: (val) => journalProvider.search(val),
+                                  style: TextStyle(
+                                    color: isDark ? Colors.white : Colors.blueGrey.shade800,
+                                    fontSize: 13,
+                                  ),
+                                  decoration: InputDecoration(
+                                    hintText: 'Cari catatan jurnal...',
+                                    hintStyle: TextStyle(color: Colors.grey.shade400, fontSize: 13),
+                                    prefixIcon: Icon(Icons.search_rounded, color: Colors.grey.shade400, size: 18),
+                                    suffixIcon: _searchController.text.isNotEmpty
+                                        ? GestureDetector(
+                                            onTap: () {
+                                              _searchController.clear();
+                                              journalProvider.search('');
+                                            },
+                                            child: Icon(Icons.clear, color: Colors.grey.shade400, size: 16),
+                                          )
+                                        : null,
+                                    border: InputBorder.none,
+                                    isDense: true,
+                                    contentPadding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+                                  ),
+                                ),
+                              ),
+                            ),
+                            const SizedBox(width: 12),
+                            GestureDetector(
+                              onTap: _selectFilterDate,
+                              child: Container(
+                                padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+                                decoration: BoxDecoration(
+                                  color: isDark ? Colors.white.withOpacity(0.07) : Colors.white,
+                                  borderRadius: BorderRadius.circular(16),
+                                  border: Border.all(
+                                    color: isDark ? Colors.white.withOpacity(0.1) : AppColors.primary.withOpacity(0.15),
+                                  ),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: AppColors.primary.withOpacity(0.04),
+                                      blurRadius: 10,
+                                      offset: const Offset(0, 2),
+                                    ),
+                                  ],
+                                ),
+                                child: Row(
+                                  children: [
+                                    Icon(Icons.filter_alt_outlined, color: isDark ? Colors.white : Colors.blueGrey.shade800, size: 16),
+                                    const SizedBox(width: 4),
+                                    Text(
+                                      'Filter',
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 13,
+                                        color: isDark ? Colors.white : Colors.blueGrey.shade800,
+                                      ),
+                                    ),
+                                  ],
+                                ),
                               ),
                             ),
                           ],
                         ),
                       ),
-                    ),
-                  ],
-                ),
-              ),
 
-              if (journalProvider.selectedFilterDate != null)
-                Padding(
-                  padding: const EdgeInsets.only(left: 20, right: 20, bottom: 8),
-                  child: Chip(
-                    label: Text(
-                      'Filter: ${DateFormat('dd MMMM yyyy').format(journalProvider.selectedFilterDate!)}',
-                      style: const TextStyle(fontSize: 12),
-                    ),
-                    onDeleted: () => journalProvider.clearFilters(),
+                      if (journalProvider.selectedFilterDate != null)
+                        Padding(
+                          padding: const EdgeInsets.only(left: 20, right: 20, bottom: 8, top: 12),
+                          child: Chip(
+                            label: Text(
+                              'Filter: ${DateFormat('dd MMMM yyyy').format(journalProvider.selectedFilterDate!)}',
+                              style: const TextStyle(fontSize: 12),
+                            ),
+                            onDeleted: () => journalProvider.clearFilters(),
+                          ),
+                        ),
+                      const SizedBox(height: 12),
+                    ],
                   ),
                 ),
 
-              // Journal Entries List
-              Expanded(
-                child: journalProvider.isLoading
-                    ? const Center(child: CircularProgressIndicator(color: AppColors.primary))
-                    : journalProvider.journals.isEmpty
-                        ? _buildEmptyState()
-                        : ListView.builder(
-                            padding: const EdgeInsets.only(left: 20, right: 20, bottom: 100),
-                            itemCount: journalProvider.journals.length,
-                            itemBuilder: (context, index) {
-                              final journal = journalProvider.journals[index];
-                              return _buildJournalCard(journal);
-                            },
-                          ),
-              ),
-            ],
+                // Journal Entries List
+                if (journalProvider.isLoading)
+                  const SliverFillRemaining(
+                    child: Center(child: CircularProgressIndicator(color: AppColors.primary)),
+                  )
+                else if (journalProvider.journals.isEmpty)
+                  SliverFillRemaining(
+                    hasScrollBody: false,
+                    child: _buildEmptyState(),
+                  )
+                else
+                  SliverPadding(
+                    padding: const EdgeInsets.only(left: 20, right: 20, bottom: 100),
+                    sliver: SliverList(
+                      delegate: SliverChildBuilderDelegate(
+                        (context, index) {
+                          final journal = journalProvider.journals[index];
+                          return _buildJournalCard(journal);
+                        },
+                        childCount: journalProvider.journals.length,
+                      ),
+                    ),
+                  ),
+              ],
           ),
         ),
       ),
@@ -866,11 +882,12 @@ class _JournalScreenState extends State<JournalScreen> with AutomaticKeepAliveCl
       decoration: BoxDecoration(
         color: isDark ? AppColors.surfaceDark : Colors.white,
         borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: isDark ? Colors.white.withOpacity(0.1) : moodColor.withOpacity(0.25), width: 1.5),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.04),
-            blurRadius: 10,
-            offset: const Offset(0, 4),
+            color: moodColor.withOpacity(0.15),
+            blurRadius: 14,
+            offset: const Offset(0, 6),
           ),
         ],
       ),
@@ -914,7 +931,7 @@ class _JournalScreenState extends State<JournalScreen> with AutomaticKeepAliveCl
                                   journal.title,
                                   style: TextStyle(
                                     fontWeight: FontWeight.bold,
-                                    fontSize: 16,
+                                    fontSize: 17,
                                     color: isDark ? Colors.white : Colors.blueGrey.shade900,
                                   ),
                                   maxLines: 1,
@@ -933,9 +950,9 @@ class _JournalScreenState extends State<JournalScreen> with AutomaticKeepAliveCl
                           Text(
                             journal.content,
                             style: TextStyle(
-                              fontSize: 13,
-                              height: 1.4,
-                              color: isDark ? Colors.grey.shade300 : Colors.blueGrey.shade800,
+                              fontSize: 14,
+                              height: 1.5,
+                              color: isDark ? Colors.grey.shade300 : Colors.blueGrey.shade900,
                             ),
                             maxLines: 2,
                             overflow: TextOverflow.ellipsis,

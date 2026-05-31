@@ -132,12 +132,16 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
                       ),
                       const SizedBox(height: 8),
                       // Tagline
-                      Text(
-                        'Your AI companion for emotional wellness.',
-                        style: TextStyle(
-                          fontSize: 14,
-                          fontWeight: FontWeight.w400,
-                          color: isDark ? Colors.grey.shade400 : Colors.blueGrey.shade600,
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 24),
+                        child: Text(
+                          'Your AI companion for emotional wellness.',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.w400,
+                            color: isDark ? Colors.grey.shade400 : Colors.blueGrey.shade600,
+                          ),
                         ),
                       ),
                     ],

@@ -7,6 +7,7 @@ import '../providers/mood_provider.dart';
 import '../providers/streak_provider.dart';
 import '../services/local_storage_service.dart';
 import '../widgets/glass_card.dart';
+import 'premium_screen.dart';
 import '../widgets/custom_button.dart';
 import 'login_screen.dart';
 
@@ -29,6 +30,36 @@ class _ProfileScreenState extends State<ProfileScreen> with AutomaticKeepAliveCl
     super.dispose();
   }
 
+  // Helper Dialog Informasi
+  void _showInfoDialog(String title, Widget content) {
+    showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
+        title: Text(title, style: const TextStyle(fontWeight: FontWeight.bold)),
+        content: content,
+        contentPadding: const EdgeInsets.fromLTRB(24, 20, 24, 16),
+        actionsPadding: const EdgeInsets.fromLTRB(24, 0, 24, 24),
+        actions: [
+          SizedBox(
+            width: double.infinity,
+            child: ElevatedButton(
+              onPressed: () => Navigator.pop(ctx),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: AppColors.primary,
+                foregroundColor: Colors.white,
+                elevation: 0,
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                padding: const EdgeInsets.symmetric(vertical: 14),
+              ),
+              child: const Text('Tutup', style: TextStyle(fontWeight: FontWeight.bold)),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
   // Dialog Edit Nama
   void _showEditNameDialog(String currentName) {
     _nameEditController.text = currentName;
@@ -39,37 +70,69 @@ class _ProfileScreenState extends State<ProfileScreen> with AutomaticKeepAliveCl
       builder: (context) => AlertDialog(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
         title: const Text('Ubah Nama Profil', style: TextStyle(fontWeight: FontWeight.bold)),
+        contentPadding: const EdgeInsets.fromLTRB(24, 20, 24, 0),
+        actionsPadding: const EdgeInsets.all(24),
         content: TextField(
           controller: _nameEditController,
-          decoration: const InputDecoration(
+          decoration: InputDecoration(
             hintText: 'Masukkan nama baru...',
+            filled: true,
+            fillColor: isDark ? Colors.black12 : Colors.grey.shade100,
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(16),
+              borderSide: BorderSide.none,
+            ),
+            contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
           ),
         ),
         actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('Batal'),
-          ),
-          TextButton(
-            onPressed: () async {
-              if (_nameEditController.text.trim().isNotEmpty) {
-                Navigator.pop(context);
-                final success = await Provider.of<AuthProvider>(context, listen: false)
-                    .updateProfileName(_nameEditController.text.trim());
-                
-                if (success && mounted) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: const Text('Nama profil berhasil diperbarui'),
-                      backgroundColor: AppColors.moodHappy,
-                      behavior: SnackBarBehavior.floating,
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-                    ),
-                  );
-                }
-              }
-            },
-            child: const Text('Simpan', style: TextStyle(color: AppColors.primary, fontWeight: FontWeight.bold)),
+          Row(
+            children: [
+              Expanded(
+                child: ElevatedButton(
+                  onPressed: () => Navigator.pop(context),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: isDark ? Colors.grey.shade800 : Colors.grey.shade200,
+                    foregroundColor: isDark ? Colors.white : Colors.black87,
+                    elevation: 0,
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                    padding: const EdgeInsets.symmetric(vertical: 14),
+                  ),
+                  child: const Text('Batal', style: TextStyle(fontWeight: FontWeight.bold)),
+                ),
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: ElevatedButton(
+                  onPressed: () async {
+                    if (_nameEditController.text.trim().isNotEmpty) {
+                      Navigator.pop(context);
+                      final success = await Provider.of<AuthProvider>(context, listen: false)
+                          .updateProfileName(_nameEditController.text.trim());
+                      
+                      if (success && mounted) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: const Text('Nama profil berhasil diperbarui'),
+                            backgroundColor: AppColors.moodHappy,
+                            behavior: SnackBarBehavior.floating,
+                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                          ),
+                        );
+                      }
+                    }
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: AppColors.primary,
+                    foregroundColor: Colors.white,
+                    elevation: 0,
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                    padding: const EdgeInsets.symmetric(vertical: 14),
+                  ),
+                  child: const Text('Simpan', style: TextStyle(fontWeight: FontWeight.bold)),
+                ),
+              ),
+            ],
           ),
         ],
       ),
@@ -106,91 +169,62 @@ class _ProfileScreenState extends State<ProfileScreen> with AutomaticKeepAliveCl
     final userStreak = user?.streak ?? 0;
     final userLevel = streakProvider.getLevel(userXp);
 
+    final topPadding = MediaQuery.of(context).padding.top;
+
     return Scaffold(
-      body: Container(
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: isDark
-                ? [AppColors.backgroundDark, const Color(0xFF1E1B4B)]
-                : [const Color(0xFFEEF2FF), const Color(0xFFF8FAFC)],
-          ),
-        ),
-        child: SafeArea(
-          child: SingleChildScrollView(
-            padding: const EdgeInsets.only(left: 20, right: 20, top: 16, bottom: 100),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      backgroundColor: isDark ? AppColors.backgroundDark : const Color(0xFFF0F6FF),
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.only(bottom: 100),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            // ===== BLUE SCROLLABLE HEADER =====
+            Container(
+              width: double.infinity,
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                  colors: isDark
+                      ? [const Color(0xFF0A1128), const Color(0xFF162545)]
+                      : [AppColors.secondary, AppColors.primary],
+                ),
+              ),
+              child: Padding(
+                padding: EdgeInsets.fromLTRB(0, topPadding, 0, 0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'Profil Saya',
-                          style: TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold,
-                            color: isDark ? Colors.white : Colors.blueGrey.shade800,
-                          ),
+                    const Padding(
+                      padding: EdgeInsets.fromLTRB(20, 14, 20, 2),
+                      child: Text(
+                        'Profil Saya',
+                        style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
                         ),
-                        const SizedBox(height: 2),
-                        Text(
-                          'Kelola akun & pencapaianmu',
-                          style: TextStyle(
-                            fontSize: 12,
-                            color: isDark ? Colors.grey.shade400 : Colors.blueGrey.shade500,
-                          ),
-                        ),
-                      ],
+                      ),
                     ),
-                    GestureDetector(
-                      onTap: () {
-                        showDialog(
-                          context: context,
-                          builder: (ctx) => AlertDialog(
-                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-                            title: const Text('Notifikasi', style: TextStyle(fontWeight: FontWeight.bold)),
-                            content: const Text('Belum ada notifikasi baru saat ini.'),
-                            actions: [
-                              TextButton(onPressed: () => Navigator.pop(ctx), child: const Text('Tutup')),
-                            ],
-                          ),
-                        );
-                      },
-                      child: Container(
-                        padding: const EdgeInsets.all(8),
-                        decoration: BoxDecoration(
-                          color: isDark ? Colors.white.withOpacity(0.05) : Colors.white,
-                          borderRadius: BorderRadius.circular(12),
-                          border: Border.all(color: isDark ? Colors.white.withOpacity(0.1) : Colors.grey.shade200),
-                        ),
-                        child: Stack(
-                          children: [
-                            const Icon(Icons.notifications_none_rounded, color: Colors.blueGrey, size: 22),
-                            Positioned(
-                              right: 0,
-                              top: 0,
-                              child: Container(
-                                width: 8,
-                                height: 8,
-                                decoration: BoxDecoration(
-                                  color: Colors.blueAccent,
-                                  shape: BoxShape.circle,
-                                  border: Border.all(color: Colors.white, width: 1.5),
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
+                    const Padding(
+                      padding: EdgeInsets.fromLTRB(20, 0, 20, 14),
+                      child: Text(
+                        'Kelola akun & pencapaianmu',
+                        style: TextStyle(fontSize: 12, color: Colors.white70),
                       ),
                     ),
                   ],
                 ),
-                const SizedBox(height: 16),
+              ),
+            ),
+
+              // ===== KONTEN PROFIL =====
+              Padding(
+                padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+
 
                 // Top: Profile Info Card
                 GlassCard(
@@ -225,12 +259,14 @@ class _ProfileScreenState extends State<ProfileScreen> with AutomaticKeepAliveCl
                                 ],
                               ),
                               child: ClipOval(
-                                child: Image.asset(
-                                  'assets/default_avatar.png',
-                                  width: 64,
-                                  height: 64,
-                                  fit: BoxFit.cover,
-                                ),
+                                child: user?.profileImage != null && user!.profileImage!.isNotEmpty
+                                    ? Image.network(user.profileImage!, width: 64, height: 64, fit: BoxFit.cover)
+                                    : Image.asset(
+                                        'assets/default_avatar.png',
+                                        width: 64,
+                                        height: 64,
+                                        fit: BoxFit.cover,
+                                      ),
                               ),
                             ),
                             Positioned(
@@ -333,23 +369,85 @@ class _ProfileScreenState extends State<ProfileScreen> with AutomaticKeepAliveCl
                 ),
                 const SizedBox(height: 12),
 
-                // Statistics Grid
-                GlassCard(
-                  padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 8),
-                  child: Row(
-                    children: [
-                      Expanded(
-                        child: _buildStatItem('Streak', '$userStreak Hari', '🔥', Colors.redAccent, 'Pertahankan!'),
+                // Premium Access Card
+                GestureDetector(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => const PremiumScreen()),
+                    );
+                  },
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        colors: isDark
+                            ? [const Color(0xFF0A1128), const Color(0xFF162545)]
+                            : [AppColors.secondary, AppColors.primary],
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
                       ),
-                      Container(width: 1, height: 44, color: Colors.grey.withOpacity(0.2)),
-                      Expanded(
-                        child: _buildStatItem('Total Mood', '${moodProvider.moodLogs.length}', '📊', Colors.blueAccent, 'Kamu hebat!'),
-                      ),
-                      Container(width: 1, height: 44, color: Colors.grey.withOpacity(0.2)),
-                      Expanded(
-                        child: _buildStatItem('Level', 'Lv. $userLevel', '🌟', Colors.orangeAccent, 'Berkembang!'),
-                      ),
-                    ],
+                      borderRadius: BorderRadius.circular(16),
+                      boxShadow: [
+                        BoxShadow(
+                          color: AppColors.primary.withOpacity(0.35),
+                          blurRadius: 14,
+                          offset: const Offset(0, 5),
+                        ),
+                      ],
+                    ),
+                    child: Row(
+                      children: [
+                        Container(
+                          padding: const EdgeInsets.all(10),
+                          decoration: BoxDecoration(
+                            color: Colors.white.withOpacity(0.2),
+                            shape: BoxShape.circle,
+                            border: Border.all(color: Colors.white.withOpacity(0.3), width: 1.5),
+                          ),
+                          child: const Icon(Icons.workspace_premium_rounded, color: Colors.white, size: 24),
+                        ),
+                        const SizedBox(width: 14),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const Text(
+                                'Dapatkan Akses Premium',
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              const SizedBox(height: 2),
+                              Text(
+                                'Buka semua fitur secara tak terbatas.',
+                                style: TextStyle(
+                                  color: Colors.white.withOpacity(0.85),
+                                  fontSize: 11,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                          decoration: BoxDecoration(
+                            color: Colors.white.withOpacity(0.2),
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                          child: const Text(
+                            'Mulai →',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 11,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
                 const SizedBox(height: 16),
@@ -360,13 +458,30 @@ class _ProfileScreenState extends State<ProfileScreen> with AutomaticKeepAliveCl
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text(
-                      'Lencana Pencapaian',
-                      style: TextStyle(
-                        fontSize: 15,
-                        fontWeight: FontWeight.bold,
-                        color: isDark ? Colors.white : Colors.blueGrey.shade800,
-                      ),
+                    Row(
+                      children: [
+                        Container(
+                          padding: const EdgeInsets.all(6),
+                          decoration: BoxDecoration(
+                            gradient: LinearGradient(
+                              colors: [AppColors.secondary, AppColors.primary],
+                              begin: Alignment.topLeft,
+                              end: Alignment.bottomRight,
+                            ),
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          child: const Icon(Icons.military_tech_rounded, size: 14, color: Colors.white),
+                        ),
+                        const SizedBox(width: 8),
+                        Text(
+                          'Lencana Pencapaian',
+                          style: TextStyle(
+                            fontSize: 15,
+                            fontWeight: FontWeight.bold,
+                            color: isDark ? Colors.white : Colors.blueGrey.shade800,
+                          ),
+                        ),
+                      ],
                     ),
                     GestureDetector(
                       onTap: () {
@@ -408,12 +523,23 @@ class _ProfileScreenState extends State<ProfileScreen> with AutomaticKeepAliveCl
                           ),
                         );
                       },
-                      child: const Text(
-                        'Lihat Semua >',
-                        style: TextStyle(
-                          fontSize: 12,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.blueAccent,
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                        decoration: BoxDecoration(
+                          gradient: LinearGradient(
+                            colors: [AppColors.secondary, AppColors.primary],
+                            begin: Alignment.topLeft,
+                            end: Alignment.bottomRight,
+                          ),
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                        child: const Text(
+                          'Lihat Semua',
+                          style: TextStyle(
+                            fontSize: 11,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                          ),
                         ),
                       ),
                     ),
@@ -447,58 +573,111 @@ class _ProfileScreenState extends State<ProfileScreen> with AutomaticKeepAliveCl
                 const SizedBox(height: 16),
 
                 // Settings Section
-                Text(
-                  'Pengaturan Aplikasi',
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                    color: isDark ? Colors.white : Colors.blueGrey.shade800,
-                  ),
+                Row(
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.all(6),
+                      decoration: BoxDecoration(
+                        gradient: LinearGradient(
+                          colors: [AppColors.secondary, AppColors.primary],
+                          begin: Alignment.topLeft,
+                          end: Alignment.bottomRight,
+                        ),
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: const Icon(Icons.settings_rounded, size: 14, color: Colors.white),
+                    ),
+                    const SizedBox(width: 8),
+                    Text(
+                      'Pengaturan Aplikasi',
+                      style: TextStyle(
+                        fontSize: 15,
+                        fontWeight: FontWeight.bold,
+                        color: isDark ? Colors.white : Colors.blueGrey.shade800,
+                      ),
+                    ),
+                  ],
                 ),
                 const SizedBox(height: 12),
                 GlassCard(
                   padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
                   child: Column(
                     children: [
-                      _buildSettingItem(Icons.person_rounded, Colors.blueAccent, 'Informasi Akun', onTap: () {
-                        showDialog(context: context, builder: (ctx) => AlertDialog(
-                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-                          title: const Text('Informasi Akun', style: TextStyle(fontWeight: FontWeight.bold)),
-                          content: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text('Nama: ${user?.name ?? '-'}'),
-                              const SizedBox(height: 6),
-                              Text('Email: ${user?.email ?? '-'}'),
+                      _buildSettingItem(Icons.person_rounded, AppColors.primary, 'Informasi Akun', onTap: () {
+                        showDialog(
+                          context: context,
+                          builder: (ctx) => AlertDialog(
+                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
+                            title: const Text('Informasi Akun', style: TextStyle(fontWeight: FontWeight.bold)),
+                            contentPadding: const EdgeInsets.fromLTRB(24, 20, 24, 16),
+                            actionsPadding: const EdgeInsets.fromLTRB(24, 0, 24, 24),
+                            content: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text('Nama: ${user?.name ?? '-'}', style: const TextStyle(fontSize: 14)),
+                                const SizedBox(height: 6),
+                                Text('Email: ${user?.email ?? '-'}', style: const TextStyle(fontSize: 14)),
+                                const SizedBox(height: 20),
+                                const Divider(height: 1, thickness: 0.5),
+                                const SizedBox(height: 16),
+                                SizedBox(
+                                  width: double.infinity,
+                                  child: OutlinedButton.icon(
+                                    onPressed: () {
+                                      Navigator.pop(ctx);
+                                      _handleLogout();
+                                    },
+                                    icon: const Icon(Icons.logout_rounded, size: 16),
+                                    label: const Text('Keluar Akun', style: TextStyle(fontWeight: FontWeight.bold)),
+                                    style: OutlinedButton.styleFrom(
+                                      foregroundColor: Colors.blueGrey.shade600,
+                                      side: BorderSide(color: Colors.blueGrey.shade300),
+                                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+                                      padding: const EdgeInsets.symmetric(vertical: 12),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                            actions: [
+                              SizedBox(
+                                width: double.infinity,
+                                child: ElevatedButton(
+                                  onPressed: () => Navigator.pop(ctx),
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: AppColors.primary,
+                                    foregroundColor: Colors.white,
+                                    elevation: 0,
+                                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                                    padding: const EdgeInsets.symmetric(vertical: 14),
+                                  ),
+                                  child: const Text('Tutup', style: TextStyle(fontWeight: FontWeight.bold)),
+                                ),
+                              ),
                             ],
                           ),
-                          actions: [TextButton(onPressed: () => Navigator.pop(ctx), child: const Text('Tutup'))],
-                        ));
+                        );
                       }),
                       const Divider(height: 1, thickness: 0.5),
-                      _buildSettingItem(Icons.lock_rounded, Colors.purpleAccent, 'Keamanan & Privasi', onTap: () {
-                        showDialog(context: context, builder: (ctx) => AlertDialog(
-                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-                          title: const Text('Keamanan & Privasi', style: TextStyle(fontWeight: FontWeight.bold)),
-                          content: const Text('Data kamu dienkripsi dan aman. Fitur ubah password segera hadir.'),
-                          actions: [TextButton(onPressed: () => Navigator.pop(ctx), child: const Text('Tutup'))],
-                        ));
+                      _buildSettingItem(Icons.lock_rounded, AppColors.primary, 'Keamanan & Privasi', onTap: () {
+                        _showInfoDialog(
+                          'Keamanan & Privasi',
+                          const Text('Data kamu dienkripsi dan aman. Fitur ubah password segera hadir.', style: TextStyle(fontSize: 14)),
+                        );
                       }),
                       const Divider(height: 1, thickness: 0.5),
-                      _buildSettingItem(Icons.notifications_rounded, Colors.orangeAccent, 'Notifikasi', onTap: () {
-                        showDialog(context: context, builder: (ctx) => AlertDialog(
-                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-                          title: const Text('Notifikasi', style: TextStyle(fontWeight: FontWeight.bold)),
-                          content: const Text('Pengaturan notifikasi lebih lengkap segera hadir.'),
-                          actions: [TextButton(onPressed: () => Navigator.pop(ctx), child: const Text('Tutup'))],
-                        ));
+                      _buildSettingItem(Icons.headset_mic_rounded, AppColors.primary, 'Hubungi Kami', onTap: () {
+                        _showInfoDialog(
+                          'Hubungi Kami',
+                          const Text('Punya pertanyaan atau kendala? Email kami di support@mindeva.com', style: TextStyle(fontSize: 14)),
+                        );
                       }),
                       const Divider(height: 1, thickness: 0.5),
                       _buildThemeTile(
                         title: 'Mode Gelap',
                         icon: Icons.dark_mode_rounded,
-                        color: Colors.indigoAccent,
+                        color: AppColors.primary,
                         value: themeProvider.themeMode == ThemeMode.dark,
                         onChanged: (val) {
                           themeProvider.setThemeMode(val ? ThemeMode.dark : ThemeMode.light);
@@ -507,22 +686,19 @@ class _ProfileScreenState extends State<ProfileScreen> with AutomaticKeepAliveCl
                     ],
                   ),
                 ),
-                const SizedBox(height: 32),
-
-                // Logout Button
-                CustomButton(
-                  text: 'Keluar Akun',
-                  color: Colors.redAccent.withOpacity(0.12),
-                  textColor: Colors.redAccent,
-                  onTap: _handleLogout,
-                ),
-              ],
+                // End of Settings Section
+                const SizedBox(height: 16),
+                ],
+              ),
             ),
-          ),
+          ],
         ),
       ),
     );
+
   }
+
+
 
   Widget _buildSettingItem(IconData icon, Color color, String title, {VoidCallback? onTap}) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
@@ -630,15 +806,6 @@ class _ProfileScreenState extends State<ProfileScreen> with AutomaticKeepAliveCl
 
   Widget _buildBadgeListItem(badge, int index) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    
-    // Theme colors for badges
-    final List<Color> badgeColors = [
-      Colors.green,
-      Colors.blueAccent,
-      Colors.orange,
-      Colors.purple,
-    ];
-    final color = badgeColors[index % badgeColors.length];
 
     // Choose icon
     Widget badgeIcon = const Text('🏅', style: TextStyle(fontSize: 20));
@@ -654,9 +821,16 @@ class _ProfileScreenState extends State<ProfileScreen> with AutomaticKeepAliveCl
       width: 120,
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 10),
       decoration: BoxDecoration(
-        color: isDark ? color.withOpacity(0.1) : color.withOpacity(0.05),
+        gradient: isDark
+            ? null
+            : LinearGradient(
+                colors: [AppColors.secondary.withOpacity(0.07), AppColors.primary.withOpacity(0.12)],
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+              ),
+        color: isDark ? AppColors.primary.withOpacity(0.12) : null,
         borderRadius: BorderRadius.circular(14),
-        border: Border.all(color: color.withOpacity(0.2), width: 1.5),
+        border: Border.all(color: AppColors.primary.withOpacity(0.3), width: 1.5),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -665,8 +839,19 @@ class _ProfileScreenState extends State<ProfileScreen> with AutomaticKeepAliveCl
           Container(
             padding: const EdgeInsets.all(6),
             decoration: BoxDecoration(
-              color: color.withOpacity(0.15),
+              gradient: const LinearGradient(
+                colors: [AppColors.secondary, AppColors.primary],
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+              ),
               shape: BoxShape.circle,
+              boxShadow: [
+                BoxShadow(
+                  color: AppColors.primary.withOpacity(0.3),
+                  blurRadius: 6,
+                  offset: const Offset(0, 2),
+                ),
+              ],
             ),
             child: badgeIcon,
           ),

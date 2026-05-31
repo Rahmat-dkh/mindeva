@@ -6,7 +6,7 @@ import '../services/local_storage_service.dart';
 
 abstract class AuthRepository {
   Future<UserModel> signIn(String email, String password);
-  Future<UserModel> signUp(String name, String email, String password);
+  Future<UserModel> signUp(String name, String email, String password, {String role = 'user'});
   Future<void> signOut();
   Future<void> sendPasswordResetEmail(String email);
   Future<UserModel?> getCurrentUser();
@@ -41,7 +41,7 @@ class MockAuthRepository implements AuthRepository {
   }
 
   @override
-  Future<UserModel> signUp(String name, String email, String password) async {
+  Future<UserModel> signUp(String name, String email, String password, {String role = 'user'}) async {
     await Future.delayed(const Duration(milliseconds: 800));
     final newUser = UserModel(
       userId: 'mock_uid_${DateTime.now().millisecondsSinceEpoch}',
@@ -51,6 +51,7 @@ class MockAuthRepository implements AuthRepository {
       streak: 1,
       totalMoodLogs: 0,
       xp: 50,
+      role: role,
     );
     await LocalStorageService.saveUser(newUser.toMap()..['userId'] = newUser.userId);
     return newUser;
@@ -117,7 +118,7 @@ class FirebaseAuthRepository implements AuthRepository {
   }
 
   @override
-  Future<UserModel> signUp(String name, String email, String password) async {
+  Future<UserModel> signUp(String name, String email, String password, {String role = 'user'}) async {
     final credential = await _firebaseAuth.createUserWithEmailAndPassword(
       email: email,
       password: password,
@@ -133,6 +134,7 @@ class FirebaseAuthRepository implements AuthRepository {
       streak: 1,
       totalMoodLogs: 0,
       xp: 50,
+      role: role,
     );
 
     // Simpan ke Firestore

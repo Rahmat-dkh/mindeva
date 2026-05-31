@@ -4,15 +4,43 @@ Mindeva adalah aplikasi mobile asisten kesehatan mental modern dan premium yang 
 
 ---
 
-## 🌟 Fitur Utama
-1. **Premium Aesthetics**: Desain modern minimalis bernuansa calming (Lavender & Soft Blue) dengan sentuhan efek *glassmorphism* melayang dan animasi halus.
-2. **Interactive Mood Tracker**: Pemilih emosi harian menggunakan emoji besar interaktif, pencatatan alasan, pencarian, dan visualisasi grafik mingguan/bulanan.
-3. **AI Mood Analysis (Gemini API)**: Menganalisis tingkat stres (skala 1-5), sentimen, afirmasi positif harian, dan rekomendasi perawatan diri otomatis berdasarkan catatan mood & jurnal.
-4. **Emotion Journal**: Penulisan jurnal harian dengan deteksi emosi otomatis dan *AI Tagging* tag otomatis.
-5. **Emotion Calendar**: Visualisasi warna mood harian dalam kalender interaktif dan heatmap emosional.
-6. **Gamified Streak & XP**: Tantangan beruntun (calm streak), pengumpulan XP mental, kenaikan level, dan pembukaan lencana prestasi (Badges).
-7. **Latihan Pernapasan**: Panduan bernapas visual kotak/bulat interaktif dengan pengaturan waktu relaksasi (Inhale - Hold - Exhale).
-8. **Mental Wellness Tips**: Dek artikel/tips terintegrasi untuk pertolongan pertama kecemasan dan self healing.
+## 🌟 Ekosistem & Fitur Utama
+
+Aplikasi mental health Flutter komprehensif dengan sistem *premium subscription*, konsultasi psikolog via WhatsApp, fitur online/offline psikolog, *booking* jadwal, *approval* konsultasi, dan manajemen saldo psikolog.
+
+### 👤 Fitur User (Pengguna)
+- Login / Register
+- Premium Subscription
+- Pemilihan Psikolog
+- Booking Jadwal Konsultasi
+- Konsultasi via WhatsApp
+- Riwayat Konsultasi
+- Pelacakan Mood (Mood Tracker) & Jurnal Refleksi dengan AI (Gemini)
+
+### 🩺 Fitur Psikolog
+- Status Online/Offline (Menentukan ketersediaan)
+- Approve / Reject Konsultasi
+- Atur Jadwal Layanan
+- Lihat Pendapatan (Saldo)
+- Withdraw Saldo
+
+### 🛡️ Fitur Admin
+- Kelola User
+- Kelola Psikolog
+- Verifikasi Withdraw
+- Monitoring Transaksi Premium
+- Memberi Rating untuk Psikolog
+
+---
+
+## 💰 Alur Konsultasi & Kompensasi Terapis
+Sistem monetisasi dan layanan dirancang dengan alur yang transparan:
+1. **User Premium Aktif**: Pengguna melakukan pembayaran *premium subscription* untuk mengakses layanan konsultasi.
+2. **Booking & Approval**: Pengguna memilih psikolog yang sedang online dan memesan jadwal. Psikolog akan menyetujui (*approve*) permintaan tersebut.
+3. **Konsultasi WhatsApp**: Setelah disetujui, sistem menampilkan tombol untuk melanjutkan konsultasi melalui WhatsApp.
+4. **Pencatatan Sistem**: Sistem menghitung aktivitas layanan psikolog dan mengakumulasikan pendapatan.
+5. **Pendapatan Bertambah**: Saldo pendapatan psikolog otomatis bertambah.
+6. **Withdrawal**: Psikolog melakukan *request withdraw* saldo yang nantinya diverifikasi oleh Admin.
 
 ---
 

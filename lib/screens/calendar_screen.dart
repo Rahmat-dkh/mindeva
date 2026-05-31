@@ -298,10 +298,17 @@ class _CalendarScreenState extends State<CalendarScreen> with AutomaticKeepAlive
         decoration: BoxDecoration(
           color: backgroundColor,
           shape: BoxShape.circle,
+          boxShadow: [
+            BoxShadow(
+              color: backgroundColor.withOpacity(0.4),
+              blurRadius: 6,
+              offset: const Offset(0, 2),
+            ),
+          ],
           border: isToday
               ? Border.all(color: AppColors.primary, width: 2)
               : isSelected
-                  ? Border.all(color: Colors.white, width: 1.5)
+                  ? Border.all(color: Colors.white, width: 2)
                   : null,
         ),
         child: Center(
@@ -323,9 +330,19 @@ class _CalendarScreenState extends State<CalendarScreen> with AutomaticKeepAlive
       mainAxisSize: MainAxisSize.min,
       children: [
         Container(
-          width: 12,
-          height: 12,
-          decoration: BoxDecoration(color: color, shape: BoxShape.circle),
+          width: 14,
+          height: 14,
+          decoration: BoxDecoration(
+            color: color, 
+            shape: BoxShape.circle,
+            boxShadow: [
+              BoxShadow(
+                color: color.withOpacity(0.4),
+                blurRadius: 4,
+                offset: const Offset(0, 2),
+              ),
+            ],
+          ),
         ),
         const SizedBox(width: 6),
         Text(
@@ -367,11 +384,12 @@ class _CalendarScreenState extends State<CalendarScreen> with AutomaticKeepAlive
       decoration: BoxDecoration(
         color: isDark ? AppColors.surfaceDark : Colors.white,
         borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: isDark ? Colors.white.withOpacity(0.1) : color.withOpacity(0.25), width: 1.5),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.04),
-            blurRadius: 10,
-            offset: const Offset(0, 4),
+            color: color.withOpacity(0.15),
+            blurRadius: 14,
+            offset: const Offset(0, 6),
           ),
         ],
       ),
@@ -409,7 +427,7 @@ class _CalendarScreenState extends State<CalendarScreen> with AutomaticKeepAlive
                           moodName,
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
-                            fontSize: 16,
+                            fontSize: 17,
                             color: isDark ? Colors.white : Colors.blueGrey.shade900,
                           ),
                         ),
@@ -427,9 +445,9 @@ class _CalendarScreenState extends State<CalendarScreen> with AutomaticKeepAlive
                     Text(
                       log.note.isNotEmpty ? log.note : "Mencatat mood tanpa keterangan tambahan.",
                       style: TextStyle(
-                        fontSize: 13,
-                        height: 1.4,
-                        color: isDark ? Colors.grey.shade300 : Colors.blueGrey.shade700,
+                        fontSize: 14,
+                        height: 1.5,
+                        color: isDark ? Colors.grey.shade300 : Colors.blueGrey.shade900,
                       ),
                     ),
                   ],

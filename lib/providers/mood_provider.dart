@@ -60,7 +60,7 @@ class MoodProvider extends ChangeNotifier {
       await _checkAndUpdateStreak(authProvider);
       
       // Tambah XP (+20 XP) untuk log mood
-      authProvider.updateUserStats(addXp: 20);
+      await authProvider.updateUserStats(addXp: 20);
 
       return savedMood;
     } catch (e) {
@@ -135,7 +135,7 @@ class MoodProvider extends ChangeNotifier {
     if (lastStreakDate == null) {
       // Streak pertama kali
       await LocalStorageService.saveLastStreakDate(todayStr);
-      authProvider.updateUserStats(streak: 1);
+      await authProvider.updateUserStats(streak: 1);
     } else {
       final lastDate = DateTime.parse(lastStreakDate);
       final now = DateTime.now();
@@ -146,11 +146,11 @@ class MoodProvider extends ChangeNotifier {
       if (difference == 1) {
         // Melanjutkan streak
         await LocalStorageService.saveLastStreakDate(todayStr);
-        authProvider.updateUserStats(streak: user.streak + 1);
+        await authProvider.updateUserStats(streak: user.streak + 1);
       } else if (difference > 1) {
         // Streak putus, reset kembali ke 1
         await LocalStorageService.saveLastStreakDate(todayStr);
-        authProvider.updateUserStats(streak: 1);
+        await authProvider.updateUserStats(streak: 1);
       }
       // Jika difference == 0, berarti sudah log hari ini, jangan tambah streak
     }

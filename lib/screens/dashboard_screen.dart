@@ -404,245 +404,261 @@ class _DashboardScreenState extends State<DashboardScreen> with AutomaticKeepAli
     final levelProgress = streakProvider.getLevelProgress(userXp);
     final nextLevelXp = streakProvider.getNextLevelXp(userXp);
 
+    final topPadding = MediaQuery.of(context).padding.top;
+
     return Scaffold(
-      body: Container(
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: isDark
-                ? [AppColors.backgroundDark, AppColors.surfaceDark]
-                : [const Color(0xFFE0F2FE), const Color(0xFFF8FAFC)],
-          ),
-        ),
-        child: SafeArea(
-          child: SingleChildScrollView(
-            padding: const EdgeInsets.only(left: 20, right: 20, top: 16, bottom: 100),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // ===== NEW HEADER =====
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
+      backgroundColor: isDark ? AppColors.backgroundDark : const Color(0xFFF0F6FF),
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.only(bottom: 100),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+
+            // ===== BLUE SCROLLABLE HEADER =====
+            Container(
+              width: double.infinity,
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                  colors: isDark
+                      ? [const Color(0xFF0A1128), const Color(0xFF162545)]
+                      : [AppColors.secondary, AppColors.primary],
+                ),
+              ),
+              child: Padding(
+                padding: EdgeInsets.fromLTRB(0, topPadding, 0, 0),
+                child: Column(
                   children: [
-                    // Dynamic Profile Picture / Initial
-                    Container(
-                      width: 48,
-                      height: 48,
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: AppColors.primary.withOpacity(0.15),
-                        border: Border.all(color: Colors.white, width: 2),
-                        image: user?.profileImage != null && user!.profileImage!.isNotEmpty
-                            ? DecorationImage(
-                                image: NetworkImage(user.profileImage!),
-                                fit: BoxFit.cover,
-                              )
-                            : null,
-                      ),
-                      child: user?.profileImage == null || user!.profileImage!.isEmpty
-                          ? Center(
-                              child: Text(
-                                user?.name.isNotEmpty == true ? user!.name[0].toUpperCase() : 'M',
-                                style: const TextStyle(
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.bold,
-                                  color: AppColors.primary,
-                                ),
-                              ),
-                            )
-                          : null,
-                    ),
-                    const SizedBox(width: 16),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
+                    // Top bar: logo + notif
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(20, 14, 20, 12),
+                      child: Row(
                         children: [
-                          Text(
-                            '${_getTimeBasedGreeting()},',
-                            style: TextStyle(fontSize: 12, color: isDark ? Colors.grey.shade400 : Colors.blueGrey.shade600),
+                          Container(
+                            width: 34,
+                            height: 34,
+                            decoration: BoxDecoration(
+                              color: Colors.white.withOpacity(0.2),
+                              shape: BoxShape.circle,
+                            ),
+                            child: const Icon(Icons.psychology_rounded, color: Colors.white, size: 20),
                           ),
-                          const SizedBox(height: 2),
-                          Row(
-                            children: [
-                              Flexible(
-                                child: Text(
-                                  user?.name ?? 'Sobat Mindeva',
-                                  style: TextStyle(
-                                    fontSize: 18,
-                                    fontWeight: FontWeight.bold,
-                                    color: isDark ? Colors.white : Colors.blueGrey.shade900,
-                                  ),
-                                  overflow: TextOverflow.ellipsis,
-                                ),
+                          const SizedBox(width: 10),
+                          const Text(
+                            'mindeva',
+                            style: TextStyle(
+                              fontSize: 21,
+                              fontWeight: FontWeight.w800,
+                              color: Colors.white,
+                              letterSpacing: 0.5,
+                            ),
+                          ),
+                          const Spacer(),
+                          GestureDetector(
+                            onTap: () {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(content: Text('Tidak ada notifikasi baru.')),
+                              );
+                            },
+                            child: Container(
+                              padding: const EdgeInsets.all(8),
+                              decoration: BoxDecoration(
+                                color: Colors.white.withOpacity(0.2),
+                                shape: BoxShape.circle,
                               ),
-                              const Text(' 👋', style: TextStyle(fontSize: 18)),
-                            ],
-                          ),
-                          const SizedBox(height: 2),
-                          Text(
-                            'Yuk, rawat dirimu hari ini 💙',
-                            style: TextStyle(fontSize: 12, color: isDark ? Colors.grey.shade400 : Colors.blueGrey.shade500),
+                              child: Stack(
+                                children: [
+                                  const Icon(Icons.notifications_none_rounded, color: Colors.white, size: 20),
+                                  Positioned(
+                                    right: 1,
+                                    top: 1,
+                                    child: Container(
+                                      width: 7,
+                                      height: 7,
+                                      decoration: BoxDecoration(
+                                        color: Colors.orangeAccent,
+                                        shape: BoxShape.circle,
+                                        border: Border.all(color: Colors.white, width: 1),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
                           ),
                         ],
                       ),
                     ),
-                    GestureDetector(
-                      onTap: () {
-                        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Tidak ada notifikasi baru.')));
-                      },
+                    // Greeting card
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(20, 0, 20, 18),
                       child: Container(
-                        padding: const EdgeInsets.all(12),
                         decoration: BoxDecoration(
-                          color: isDark ? Colors.white.withOpacity(0.05) : Colors.white,
-                          borderRadius: BorderRadius.circular(18),
+                          color: isDark ? Colors.white.withOpacity(0.08) : Colors.white,
+                          borderRadius: BorderRadius.circular(14),
                           boxShadow: [
-                            if (!isDark)
-                              BoxShadow(color: Colors.black.withOpacity(0.03), blurRadius: 10, offset: const Offset(0, 4)),
+                            BoxShadow(
+                              color: Colors.black.withOpacity(0.12),
+                              blurRadius: 10,
+                              offset: const Offset(0, 3),
+                            ),
                           ],
                         ),
-                        child: Stack(
+                        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+                        child: Row(
                           children: [
-                            const Icon(Icons.notifications_none_rounded, color: Colors.blueGrey),
-                            Positioned(
-                              right: 2,
-                              top: 2,
+                            ClipOval(
                               child: Container(
-                                width: 8,
-                                height: 8,
-                                decoration: BoxDecoration(color: Colors.red, shape: BoxShape.circle, border: Border.all(color: Colors.white, width: 1.5)),
+                                width: 36,
+                                height: 36,
+                                color: AppColors.primary.withOpacity(0.1),
+                                child: user?.profileImage != null && user!.profileImage!.isNotEmpty
+                                    ? Image.network(user.profileImage!, fit: BoxFit.cover)
+                                    : Image.asset('assets/default_avatar.png', fit: BoxFit.cover),
                               ),
                             ),
+                            const SizedBox(width: 12),
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    '${_getTimeBasedGreeting()}, ${user?.name ?? 'Sobat Mindeva'} 👋',
+                                    style: TextStyle(
+                                      fontSize: 13,
+                                      fontWeight: FontWeight.w700,
+                                      color: isDark ? Colors.white : Colors.blueGrey.shade900,
+                                    ),
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                  const SizedBox(height: 2),
+                                  Text(
+                                    'Yuk, rawat dirimu hari ini 💙',
+                                    style: TextStyle(
+                                      fontSize: 11,
+                                      color: isDark ? Colors.grey.shade400 : Colors.blueGrey.shade500,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            const SizedBox(width: 6),
+                            const Icon(Icons.chevron_right_rounded, color: AppColors.primary, size: 18),
                           ],
                         ),
                       ),
                     ),
                   ],
                 ),
-                const SizedBox(height: 24),
+              ),
+            ),
 
-                // ===== STREAK CARD =====
-                Builder(builder: (context) {
-                  final streak = user?.streak ?? 0;
-                  final gradientColors = _getStreakGradient(streak);
-                  final shadowColor = _getStreakShadowColor(streak);
-                  final streakEmoji = _getStreakEmoji(streak);
-                  final checkColor = _getStreakCheckColor(streak);
+            // ===== KONTEN UTAMA =====
+            Padding(
+              padding: const EdgeInsets.fromLTRB(16, 20, 16, 0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
 
-                  return Container(
-                    width: double.infinity,
-                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(20),
-                      gradient: LinearGradient(
-                        begin: Alignment.topLeft,
-                        end: Alignment.bottomRight,
-                        colors: gradientColors,
+                  // ===== STREAK CARD =====
+                  Builder(builder: (context) {
+                    final streak = user?.streak ?? 0;
+                    final streakEmoji = _getStreakEmoji(streak);
+
+                    return Container(
+                      width: double.infinity,
+                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(18),
+                        gradient: LinearGradient(
+                          begin: Alignment.topLeft,
+                          end: Alignment.bottomRight,
+                          colors: isDark
+                              ? [const Color(0xFF162545), const Color(0xFF0A1128)]
+                              : [AppColors.secondary, AppColors.primary],
+                        ),
+                        boxShadow: [
+                          BoxShadow(
+                            color: AppColors.primary.withOpacity(0.35),
+                            blurRadius: 16,
+                            offset: const Offset(0, 6),
+                          ),
+                        ],
                       ),
-                      boxShadow: [
-                        BoxShadow(color: shadowColor.withOpacity(0.35), blurRadius: 18, offset: const Offset(0, 8)),
-                      ],
-                    ),
-                    child: Row(
-                      children: [
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Row(
-                                children: [
-                                  Text(streakEmoji, style: const TextStyle(fontSize: 20)),
-                                  const SizedBox(width: 8),
-                                  Text(
-                                    _getStreakText(streak),
-                                    style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white),
-                                  ),
-                                ],
-                              ),
-                              const SizedBox(height: 4),
-                              Text(
-                                'Pertahankan streak mu!',
-                                style: TextStyle(fontSize: 12, color: Colors.white.withOpacity(0.9)),
-                              ),
-                              const SizedBox(height: 12),
-                              // Days Row (dynamic based on current weekday)
-                              Builder(builder: (context) {
-                                final dayLabels = ['M', 'S', 'S', 'R', 'K', 'J', 'S'];
-                                final todayIdx = DateTime.now().weekday - 1;
-                                final completedDays = streak >= 7 ? todayIdx + 1 : (streak > todayIdx + 1 ? todayIdx + 1 : streak);
-
-                                return Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                  children: dayLabels.asMap().entries.map((entry) {
-                                    int idx = entry.key;
-                                    String day = entry.value;
-                                    bool isCompleted = idx < completedDays;
-                                    bool isToday = idx == todayIdx;
-                                    return Container(
-                                      width: 24,
-                                      height: 24,
-                                      decoration: BoxDecoration(
-                                        color: isCompleted ? Colors.white : Colors.white.withOpacity(0.15),
-                                        shape: BoxShape.circle,
-                                        border: Border.all(
-                                          color: isToday ? Colors.white : Colors.transparent,
-                                          width: isToday ? 2 : 0,
-                                        ),
-                                      ),
-                                      child: Center(
-                                        child: isCompleted
-                                          ? Icon(Icons.check, color: checkColor, size: 12)
-                                          : Text(day, style: const TextStyle(color: Colors.white, fontSize: 10)),
-                                      ),
-                                    );
-                                  }).toList(),
-                                );
-                              }),
-                            ],
-                          ),
-                        ),
-                        const SizedBox(width: 12),
-                        // HD 3D Flame/Icon
-                        Container(
-                          width: 60,
-                          height: 60,
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            gradient: const RadialGradient(
-                              colors: [Colors.white30, Colors.transparent],
-                              center: Alignment(-0.3, -0.3),
-                              radius: 0.8,
-                            ),
-                            border: Border.all(color: Colors.white.withOpacity(0.4), width: 1.5),
-                            boxShadow: [
-                              BoxShadow(color: Colors.white.withOpacity(0.2), blurRadius: 15, spreadRadius: 5),
-                            ],
-                          ),
-                          child: Stack(
-                            alignment: Alignment.center,
-                            children: [
-                              Positioned(
-                                bottom: 8,
-                                child: Container(
-                                  width: 30,
-                                  height: 6,
-                                  decoration: BoxDecoration(
-                                    color: Colors.white.withOpacity(0.3),
-                                    borderRadius: BorderRadius.circular(10),
-                                  ),
+                      child: Row(
+                        children: [
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Row(
+                                  children: [
+                                    Text(streakEmoji, style: const TextStyle(fontSize: 18)),
+                                    const SizedBox(width: 8),
+                                    Text(
+                                      _getStreakText(streak),
+                                      style: const TextStyle(fontSize: 15, fontWeight: FontWeight.bold, color: Colors.white),
+                                    ),
+                                  ],
                                 ),
-                              ),
-                              Text(streakEmoji, style: const TextStyle(fontSize: 32, shadows: [
-                                Shadow(color: Colors.orangeAccent, blurRadius: 15)
-                              ])),
-                            ],
+                                const SizedBox(height: 3),
+                                const Text(
+                                  'Pertahankan streak mu!',
+                                  style: TextStyle(fontSize: 11, color: Colors.white70),
+                                ),
+                                const SizedBox(height: 10),
+                                Builder(builder: (context) {
+                                  final dayLabels = ['S', 'S', 'R', 'K', 'J', 'S', 'M'];
+                                  final todayIdx = DateTime.now().weekday - 1;
+                                  return Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    children: dayLabels.asMap().entries.map((entry) {
+                                      int idx = entry.key;
+                                      String day = entry.value;
+                                      bool isCompleted = (idx <= todayIdx) && (idx > todayIdx - streak);
+                                      bool isToday = idx == todayIdx;
+                                      return Container(
+                                        width: 22,
+                                        height: 22,
+                                        decoration: BoxDecoration(
+                                          color: isCompleted ? Colors.white : Colors.white.withOpacity(0.15),
+                                          shape: BoxShape.circle,
+                                          border: Border.all(
+                                            color: isToday ? Colors.white : Colors.transparent,
+                                            width: isToday ? 2 : 0,
+                                          ),
+                                        ),
+                                        child: Center(
+                                          child: isCompleted
+                                              ? Icon(Icons.check, color: AppColors.primary, size: 11)
+                                              : Text(day, style: const TextStyle(color: Colors.white, fontSize: 9)),
+                                        ),
+                                      );
+                                    }).toList(),
+                                  );
+                                }),
+                              ],
+                            ),
                           ),
-                        ),
-                      ],
-                    ),
-                  );
-                }),
-                const SizedBox(height: 16),
+                          const SizedBox(width: 10),
+                          Container(
+                            width: 52,
+                            height: 52,
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              color: Colors.white.withOpacity(0.15),
+                              border: Border.all(color: Colors.white.withOpacity(0.4), width: 1.5),
+                            ),
+                            child: Center(
+                              child: Text(streakEmoji, style: const TextStyle(fontSize: 26)),
+                            ),
+                          ),
+                        ],
+                      ),
+                    );
+                  }),
+                  const SizedBox(height: 16),
 
                 // ===== LEVEL PROGRESS CARD =====
                 Container(
@@ -650,9 +666,9 @@ class _DashboardScreenState extends State<DashboardScreen> with AutomaticKeepAli
                   decoration: BoxDecoration(
                     color: isDark ? AppColors.surfaceDark : Colors.white,
                     borderRadius: BorderRadius.circular(20),
+                    border: Border.all(color: isDark ? Colors.white.withOpacity(0.1) : Colors.blue.withOpacity(0.2), width: 1.5),
                     boxShadow: [
-                      if (!isDark)
-                        BoxShadow(color: Colors.black.withOpacity(0.03), blurRadius: 10, offset: const Offset(0, 4)),
+                      BoxShadow(color: Colors.blue.withOpacity(0.12), blurRadius: 14, offset: const Offset(0, 6)),
                     ],
                   ),
                   child: Row(
@@ -758,9 +774,9 @@ class _DashboardScreenState extends State<DashboardScreen> with AutomaticKeepAli
                   decoration: BoxDecoration(
                     color: isDark ? AppColors.surfaceDark : Colors.white,
                     borderRadius: BorderRadius.circular(16),
+                    border: Border.all(color: isDark ? Colors.white.withOpacity(0.1) : Colors.blueAccent.withOpacity(0.2), width: 1.5),
                     boxShadow: [
-                      if (!isDark)
-                        BoxShadow(color: Colors.black.withOpacity(0.03), blurRadius: 10, offset: const Offset(0, 4)),
+                      BoxShadow(color: Colors.blueAccent.withOpacity(0.12), blurRadius: 14, offset: const Offset(0, 6)),
                     ],
                   ),
                   child: Row(
@@ -820,50 +836,53 @@ class _DashboardScreenState extends State<DashboardScreen> with AutomaticKeepAli
                   ],
                 ),
                 const SizedBox(height: 16),
-                SingleChildScrollView(
-                  scrollDirection: Axis.horizontal,
-                  child: Row(
-                    children: [
-                      _buildRecommendationCard(
-                        'Latihan\nPernapasan', 
-                        '3-5 menit', 
-                        Icons.air_rounded, 
-                        Colors.green,
+                Row(
+                  children: [
+                    Expanded(
+                      child: _buildRecommendationCard(
+                        'Pernapasan',
+                        '3-5 menit',
+                        Icons.air_rounded,
+                        AppColors.primary,
                         onTap: () {
                           Navigator.push(
                             context,
                             MaterialPageRoute(builder: (context) => const BreathingExerciseScreen()),
                           );
-                        }
+                        },
                       ),
-                      const SizedBox(width: 12),
-                      _buildRecommendationCard(
-                        'Tips Wellness', 
-                        'Panduan self care', 
-                        Icons.eco_rounded, 
-                        Colors.purple,
+                    ),
+                    const SizedBox(width: 10),
+                    Expanded(
+                      child: _buildRecommendationCard(
+                        'Tips Wellness',
+                        'Self care',
+                        Icons.eco_rounded,
+                        AppColors.primaryLight,
                         onTap: () {
                           Navigator.push(
                             context,
                             MaterialPageRoute(builder: (context) => const WellnessTipsScreen()),
                           );
-                        }
+                        },
                       ),
-                      const SizedBox(width: 12),
-                      _buildRecommendationCard(
-                        'Meditasi\nSingkat', 
-                        '10 menit', 
-                        Icons.self_improvement_rounded, 
-                        Colors.blue,
+                    ),
+                    const SizedBox(width: 10),
+                    Expanded(
+                      child: _buildRecommendationCard(
+                        'Meditasi',
+                        '10 menit',
+                        Icons.self_improvement_rounded,
+                        AppColors.secondary,
                         onTap: () {
                           Navigator.push(
                             context,
                             MaterialPageRoute(builder: (context) => const MeditationScreen()),
                           );
-                        }
+                        },
                       ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
                 const SizedBox(height: 24),
 
@@ -884,9 +903,10 @@ class _DashboardScreenState extends State<DashboardScreen> with AutomaticKeepAli
                     child: _buildWeeklyChart(moodProvider.moodLogs),
                   ),
                 ),
-              ],
+                ],
+              ),
             ),
-          ),
+          ],
         ),
       ),
     );
@@ -908,17 +928,19 @@ class _DashboardScreenState extends State<DashboardScreen> with AutomaticKeepAli
         duration: const Duration(milliseconds: 200),
         padding: const EdgeInsets.symmetric(vertical: 10),
         decoration: BoxDecoration(
-          color: isDark ? AppColors.surfaceDark : Colors.white,
+          color: isSelected 
+              ? (isDark ? color.withOpacity(0.15) : color.withOpacity(0.08))
+              : (isDark ? AppColors.surfaceDark : Colors.white),
           borderRadius: BorderRadius.circular(16),
           border: Border.all(
-            color: isSelected ? color : (isDark ? Colors.grey.shade800 : Colors.transparent),
+            color: isSelected ? color : (isDark ? Colors.white.withOpacity(0.1) : Colors.grey.shade300),
             width: isSelected ? 2.0 : 1.0,
           ),
           boxShadow: [
             BoxShadow(
-              color: isSelected ? color.withOpacity(0.3) : Colors.black.withOpacity(0.08),
-              blurRadius: isSelected ? 12 : 8,
-              offset: const Offset(0, 4),
+              color: isSelected ? color.withOpacity(0.4) : Colors.black.withOpacity(0.1),
+              blurRadius: isSelected ? 16 : 10,
+              offset: const Offset(0, 5),
             ),
             if (!isSelected && !isDark)
               const BoxShadow(
@@ -934,8 +956,8 @@ class _DashboardScreenState extends State<DashboardScreen> with AutomaticKeepAli
           children: [
             Column(
               children: [
-                Text(emoji, style: const TextStyle(fontSize: 32)),
-                const SizedBox(height: 8),
+                Text(emoji, style: const TextStyle(fontSize: 40)),
+                const SizedBox(height: 6),
                 Text(
                   name,
                   style: TextStyle(
@@ -981,46 +1003,45 @@ class _DashboardScreenState extends State<DashboardScreen> with AutomaticKeepAli
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        width: 170,
-        padding: const EdgeInsets.all(12),
+        padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 10),
         decoration: BoxDecoration(
-          color: isDark ? color.withOpacity(0.15) : color.withOpacity(0.1),
-          borderRadius: BorderRadius.circular(16),
+          color: isDark ? AppColors.surfaceDark : Colors.white,
+          borderRadius: BorderRadius.circular(14),
+          border: Border.all(color: isDark ? Colors.white.withOpacity(0.1) : color.withOpacity(0.25), width: 1.5),
+          boxShadow: [
+            BoxShadow(
+              color: color.withOpacity(0.12),
+              blurRadius: 10,
+              offset: const Offset(0, 4),
+            ),
+          ],
         ),
-        child: Row(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
           children: [
             Container(
               padding: const EdgeInsets.all(8),
               decoration: BoxDecoration(
-                color: isDark ? AppColors.surfaceDark : Colors.white,
-                borderRadius: BorderRadius.circular(10),
-              ),
-              child: Icon(icon, color: color, size: 24),
-            ),
-            const SizedBox(width: 12),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    title,
-                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12, color: color, height: 1.2),
-                  ),
-                  const SizedBox(height: 2),
-                  Text(
-                    subtitle,
-                    style: TextStyle(fontSize: 10, color: isDark ? Colors.grey.shade400 : Colors.blueGrey.shade500),
-                  ),
-                ],
-              ),
-            ),
-            Container(
-              padding: const EdgeInsets.all(4),
-              decoration: BoxDecoration(
-                color: color,
+                color: color.withOpacity(0.1),
                 shape: BoxShape.circle,
               ),
-              child: const Icon(Icons.play_arrow_rounded, color: Colors.white, size: 16),
+              child: Icon(icon, color: color, size: 22),
+            ),
+            const SizedBox(height: 6),
+            Text(
+              title,
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 11, color: color),
+              textAlign: TextAlign.center,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+            ),
+            const SizedBox(height: 2),
+            Text(
+              subtitle,
+              style: TextStyle(fontSize: 9, color: isDark ? Colors.grey.shade400 : Colors.blueGrey.shade400),
+              textAlign: TextAlign.center,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
             ),
           ],
         ),

@@ -6,6 +6,8 @@ class UserModel {
   final int streak;
   final int totalMoodLogs;
   final int xp;
+  final bool isPremium;
+  final String role; // 'user' or 'psychologist'
   final DateTime createdAt;
 
   UserModel({
@@ -16,6 +18,8 @@ class UserModel {
     this.streak = 0,
     this.totalMoodLogs = 0,
     this.xp = 0,
+    this.isPremium = false,
+    this.role = 'user',
     required this.createdAt,
   });
 
@@ -45,6 +49,8 @@ class UserModel {
       streak: map['streak'] ?? 0,
       totalMoodLogs: map['totalMoodLogs'] ?? 0,
       xp: map['xp'] ?? 0,
+      isPremium: map['isPremium'] == true,
+      role: map['role'] ?? 'user',
       createdAt: parsedDate,
     );
   }
@@ -58,6 +64,8 @@ class UserModel {
       'streak': streak,
       'totalMoodLogs': totalMoodLogs,
       'xp': xp,
+      'isPremium': isPremium,
+      'role': role,
       'createdAt': createdAt.millisecondsSinceEpoch,
     };
   }
@@ -71,6 +79,8 @@ class UserModel {
       'streak': streak,
       'totalMoodLogs': totalMoodLogs,
       'xp': xp,
+      'isPremium': isPremium,
+      'role': role,
       'createdAt': createdAt.toIso8601String(),
     };
   }
@@ -82,6 +92,8 @@ class UserModel {
     int? streak,
     int? totalMoodLogs,
     int? xp,
+    bool? isPremium,
+    String? role,
   }) {
     return UserModel(
       userId: userId,
@@ -91,6 +103,8 @@ class UserModel {
       streak: streak ?? this.streak,
       totalMoodLogs: totalMoodLogs ?? this.totalMoodLogs,
       xp: xp ?? this.xp,
+      isPremium: isPremium ?? this.isPremium,
+      role: role ?? this.role,
       createdAt: createdAt,
     );
   }

@@ -5,6 +5,7 @@ import '../providers/auth_provider.dart';
 import '../widgets/custom_button.dart';
 import '../widgets/social_login_button.dart';
 import 'main_navigation_screen.dart';
+import 'psychologist_dashboard_screen.dart';
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({super.key});
@@ -22,6 +23,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
   
   bool _obscurePassword = true;
   bool _obscureConfirmPassword = true;
+  String _selectedRole = 'user';
   
   String _passwordStrength = '';
   Color _passwordStrengthColor = Colors.redAccent;
@@ -97,13 +99,21 @@ class _RegisterScreenState extends State<RegisterScreen> {
       _nameController.text.trim(),
       _emailController.text.trim(),
       _passwordController.text,
+      role: _selectedRole,
     );
 
     if (success && mounted) {
-      Navigator.of(context).pushAndRemoveUntil(
-        MaterialPageRoute(builder: (context) => const MainNavigationScreen()),
-        (route) => false,
-      );
+      if (authProvider.user?.role == 'psychologist') {
+        Navigator.of(context).pushAndRemoveUntil(
+          MaterialPageRoute(builder: (context) => const PsychologistDashboardScreen()),
+          (route) => false,
+        );
+      } else {
+        Navigator.of(context).pushAndRemoveUntil(
+          MaterialPageRoute(builder: (context) => const MainNavigationScreen()),
+          (route) => false,
+        );
+      }
     } else if (mounted) {
       _showErrorSnackBar(authProvider.errorMessage ?? "Gagal mendaftar.");
     }
@@ -114,10 +124,17 @@ class _RegisterScreenState extends State<RegisterScreen> {
     final success = await authProvider.signInWithGoogle();
     
     if (success && mounted) {
-      Navigator.of(context).pushAndRemoveUntil(
-        MaterialPageRoute(builder: (context) => const MainNavigationScreen()),
-        (route) => false,
-      );
+      if (authProvider.user?.role == 'psychologist') {
+        Navigator.of(context).pushAndRemoveUntil(
+          MaterialPageRoute(builder: (context) => const PsychologistDashboardScreen()),
+          (route) => false,
+        );
+      } else {
+        Navigator.of(context).pushAndRemoveUntil(
+          MaterialPageRoute(builder: (context) => const MainNavigationScreen()),
+          (route) => false,
+        );
+      }
     } else if (mounted && authProvider.errorMessage != null && !authProvider.errorMessage!.contains('dibatalkan')) {
       _showErrorSnackBar(authProvider.errorMessage!);
     }
@@ -295,6 +312,62 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.stretch,
                             children: [
+                              // Role Selection
+                              Row(
+                                children: [
+                                  Expanded(
+                                    child: GestureDetector(
+                                      onTap: () => setState(() => _selectedRole = 'user'),
+                                      child: Container(
+                                        padding: const EdgeInsets.symmetric(vertical: 12),
+                                        decoration: BoxDecoration(
+                                          color: _selectedRole == 'user' ? AppColors.primary : Colors.transparent,
+                                          borderRadius: BorderRadius.circular(12),
+                                          border: Border.all(
+                                            color: _selectedRole == 'user' ? AppColors.primary : Colors.grey.shade300,
+                                          ),
+                                        ),
+                                        alignment: Alignment.center,
+                                        child: Text(
+                                          'Pengguna',
+                                          style: TextStyle(
+                                            color: _selectedRole == 'user' ? Colors.white : (isDark ? Colors.grey.shade400 : Colors.blueGrey.shade600),
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 13,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  const SizedBox(width: 12),
+                                  Expanded(
+                                    child: GestureDetector(
+                                      onTap: () => setState(() => _selectedRole = 'psychologist'),
+                                      child: Container(
+                                        padding: const EdgeInsets.symmetric(vertical: 12),
+                                        decoration: BoxDecoration(
+                                          color: _selectedRole == 'psychologist' ? AppColors.primary : Colors.transparent,
+                                          borderRadius: BorderRadius.circular(12),
+                                          border: Border.all(
+                                            color: _selectedRole == 'psychologist' ? AppColors.primary : Colors.grey.shade300,
+                                          ),
+                                        ),
+                                        alignment: Alignment.center,
+                                        child: Text(
+                                          'Psikolog',
+                                          style: TextStyle(
+                                            color: _selectedRole == 'psychologist' ? Colors.white : (isDark ? Colors.grey.shade400 : Colors.blueGrey.shade600),
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 13,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              const SizedBox(height: 20),
+
                               // Name
                               _buildTextField(
                                 controller: _nameController,

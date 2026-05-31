@@ -140,7 +140,7 @@ class StreakProvider extends ChangeNotifier {
     }
 
     // Tambah bonus XP (+100 XP) untuk unlock lencana
-    authProvider.updateUserStats(addXp: 100);
+    await authProvider.updateUserStats(addXp: 100);
 
     return newBadge;
   }
